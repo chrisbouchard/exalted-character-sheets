@@ -1,0 +1,75 @@
+% Set the page size.
+\geometry{paper=letterpaper, margin=1in}
+
+% Set up our preferred fonts.
+\setmainfont[Ligatures={Common,TeX}]{Libertinus Serif}
+\setmathfont{Libertinus Math}
+
+% Don't indent paragraphs; separate them with whitespace.
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+% Reduce spacing around titles
+\titlespacing{\section}{0pt}{\parskip}{-0.5\parskip}
+\titlespacing{\subsection}{0pt}{\parskip}{-0.5\parskip}
+\titlespacing{\subsubsection}{0pt}{\parskip}{-\parskip}
+
+% URLs should be typeset in the same font as the surrouding text.
+\urlstyle{same}
+
+
+% Dates are separated with -, not /
+\renewcommand{\dateseparator}{-}
+
+% A date format for Day Month Year style dates.
+\newdateformat{ddmmmyyyydate}{%
+    \ifshowdow\dayofweekname{\THEDAY}{\THEMONTH}{\THEYEAR}\fi
+    \THEDAY{} \monthname[\THEMONTH{}] \THEYEAR{}%
+}
+
+\newcommand{\mychapter}[2]{%
+    \outline{1}[chapter:#1]{#2}%
+    \chapter*{\textsc{#2}}%
+    \label{chapter:#2}%
+}
+
+\newcommand{\mysection}[2]{%
+    \outline{2}[section:#1]{#2}%
+    \section*{\textsc{#2}}%
+    \label{section:#1}%
+}
+
+\newcommand{\mysubsection}[2]{%
+    \outline{3}[subsection:#1]{#2}%
+    \subsection*{\textsc{#2}}%
+    \label{subsection:#1}%
+}
+
+\newcommand{\Dots}[1]{%
+    \multido{}{#1}{•}%
+}
+
+\newcommand{\Artifact}[4]{%
+    \needspace{4\baselineskip}%
+    \outline{2}[artifact:#1]{#2}%
+    \section*{\textit{\textsc{#2}}}%
+    \label{artifact:#1}%
+    \vspace{-0.5\parskip}%
+    \subsection*{\textit{\textsc{(#3)}}}%
+    \textbf{Keywords:} #4%
+}
+
+\newcommand{\Charm}[8]{%
+    \needspace{6.5\baselineskip}%
+    \outline{3}[charm:#1]{#2}%
+    \subsection*{\textsc{#2}}%
+    \label{charm:#1}%
+    \textbf{Cost:} #3; \textbf{Mins:} #4\\%
+    \textbf{Type:} #5\\%
+    \textbf{Keywords:} #6\\%
+    \textbf{Duration:} #7\\%
+    \textbf{Prerequisites:} #8%
+}
+
+% vim: filetype=tex: textwidth=79:
+
