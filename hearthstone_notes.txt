@@ -1,0 +1,68 @@
+Academy of the Path of Balancing Light
+(Standard Solar Manse)
+
+In the First Age, [Solar Friend] and Sagacious Hand spent decades scouring
+Creation for the perfect place to build the Academy. Finally, [Solar Friend]
+found the spot: An ancient and long-dormant volcano in the East, where exposed
+gold had combined with flowing lava and unrelenting sunlight, forming veins of
+natural Orachalcum in the very ground. The entire caldera pulsed with power and
+potential.
+
+With the help of [Lunar Mate] and [Sidereal Friend], the group constructed the
+Academy at the center of the caldera. The main structure is built from imported
+marble infused with Orachalcum, accented with Orachaucum-flecked obsidian
+carved from the caldera.
+
+A visitor to the Academy must first scale the mountain it is built on. The
+climb is challenging but not deadly. In the First Age there were paths built to
+assist, but they have long since fallen away or been overgrown. No matter the
+surrounding weather, the summit of the mountain is surrounded by clouds, and
+the winds behave strangely.
+
+The Academy takes up most of the caldera, its outer walls built into the sides
+of the bowl.
+
+Effect:
+
+As an Exalt attunes to the Academy, so too the Manse attunes to the Exalt. The
+Academy inspects the Exalt's soul and picks one of her Defining Intimacies to
+make its own. The Academy will attempt to pick the Intimacy closest to the
+Exalt's heart. If the owner becomes unattuned from the Academy and later
+reattunes, it will choose the same Intimacy unless that Intimacy is no longer
+Defining, or she has gained a new Defining Intimacy.
+
+As long as the Exalt remains the owner of the Academy, any teaching that
+happens in its marble halls will implicitly pass on that Intimacy. A student
+listening to a lecture will find the words and ideas connecting in ways the
+teacher never consciously intended. Mechanically, at the end of any lesson, the
+Academy makes an instill action to place its Intimacy as a Minor Intimacy in
+the heart of the student, using the teacher's (Manipulation + Performance),
+plus any of the teacher's relevant specialties. If the lesson was explicitly in
+line with the Academy's Intimacy, it adds one success to this roll. The teacher
+may not enhance this action with charms, as it the Manse itself channeling the
+beliefs of its owner.
+
+Hearthstone:
+
+The hearthstone produced by the Academy is a round black stone with large
+flecks of gold. In sunlight, the black is becomes slightly translucent, giving
+way to deep reds, oranges, and purples. The stone feels warm to the touch.
+
+When an Exalt is attuned to the Academy, in a two mile radius around the
+hearthstone, people who would be sympathetic to the Academy's Intimacy feel
+drawn to the location of the stone. They do not know particularly why, only
+that there's something important there.
+
+Construction:
+
+Power Points:
+  Standard Manse (6)
+
+Powers:
+  Archive (2)
+  Fortress (3)
+
+http://forum.theonyxpath.com/forum/main-category/exalted/1136654-exalted-seats-of-power
+
+# vim: textwidth=79: nocindent: nosmartindent:
+
