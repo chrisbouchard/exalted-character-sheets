@@ -17,7 +17,6 @@
 % URLs should be typeset in the same font as the surrouding text.
 \urlstyle{same}
 
-
 % Dates are separated with -, not /
 \renewcommand{\dateseparator}{-}
 
@@ -49,26 +48,53 @@
     \multido{}{#1}{•}%
 }
 
-\newcommand{\Artifact}[4]{%
+\makeatletter
+\define@key{MeritKeys}{Description}{\def\MeritDescription{#1}}
+\define@key{MeritKeys}{Keywords}{\def\MeritKeywords{#1}}
+\makeatother
+
+\NewEnviron{Merit}[3]{%
+    \def\MeritName{#1}%
+    \def\MeritLabel{#3}%
+    \setkeys{MeritKeys}{%
+        Keywords=None,%
+        #2}%
     \needspace{4\baselineskip}%
-    \outline{2}[artifact:#1]{#2}%
-    \section*{\textit{\textsc{#2}}}%
-    \label{artifact:#1}%
+    \outline{2}[merit:\MeritLabel]{\MeritName}%
+    \section*{\textit{\textsc{\MeritName}}}\label{merit:\MeritLabel}%
     \vspace{-0.5\parskip}%
-    \subsection*{\textit{\textsc{(#3)}}}%
-    \textbf{Keywords:} #4%
+    \subsection*{\textit{\textsc{(\MeritDescription)}}}%
+    \textbf{Keywords:} \MeritKeywords%
+    \par\BODY%
 }
 
-\newcommand{\Charm}[8]{%
+\makeatletter
+\define@key{CharmKeys}{Cost}{\def\CharmCost{#1}}
+\define@key{CharmKeys}{Duration}{\def\CharmDuration{#1}}
+\define@key{CharmKeys}{Keywords}{\def\CharmKeywords{#1}}
+\define@key{CharmKeys}{Mins}{\def\CharmMins{#1}}
+\define@key{CharmKeys}{Prerequisites}{\def\CharmPrerequisites{#1}}
+\define@key{CharmKeys}{Type}{\def\CharmType{#1}}
+\makeatother
+
+\NewEnviron{Charm}[3]{%
+    \def\CharmName{#1}%
+    \def\CharmLabel{#3}%
+    \setkeys{CharmKeys}{%
+        Cost=--,%
+        Keywords=None,%
+        Mins=None,%
+        Prerequisites=None,%
+        #2}%
     \needspace{6.5\baselineskip}%
-    \outline{3}[charm:#1]{#2}%
-    \subsection*{\textsc{#2}}%
-    \label{charm:#1}%
-    \textbf{Cost:} #3; \textbf{Mins:} #4\\%
-    \textbf{Type:} #5\\%
-    \textbf{Keywords:} #6\\%
-    \textbf{Duration:} #7\\%
-    \textbf{Prerequisites:} #8%
+    \outline{3}[charm:\CharmLabel]{\CharmName}%
+    \subsection*{\textsc{\CharmName}}\label{charm:\CharmLabel}%
+    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins\\%
+    \textbf{Type:} \CharmType\\%
+    \textbf{Keywords:} \CharmKeywords\\%
+    \textbf{Duration:} \CharmDuration\\%
+    \textbf{Prerequisites:} \CharmPrerequisites%
+    \par\BODY%
 }
 
 % vim: filetype=tex: textwidth=79:

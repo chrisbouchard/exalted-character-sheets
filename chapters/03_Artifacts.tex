@@ -1,7 +1,9 @@
-﻿\mychapter{artifacts}{Artifacts}
+﻿\mychapter{artifacts}{Artifacts and Other Merits}
 
-\Artifact{mangata}{Mångata}{Moonsilver Light Armor, Artifact~\Dots{3}}{Silent}
-
+\begin{Merit}{Mångata}{
+    Description={Moonsilver Light Armor, Artifact~\Dots{3}},
+    Keywords=Silent
+}{mangata}
 These flowing robes are woven from incredibly fine strands of moonsilver and
 jade. The resulting material has the texture of silk, the strength of steel,
 and the glittering opalescence of moonlight on water. There is a single
@@ -29,8 +31,13 @@ Mångata is designed to be worn by a Celestial Exalt. Any Exalt may attune to
 this artifact and gain the benefit described above, but a non-Celestial Exalt
 is unable to unlock any of its evocations.
 
-\Charm{mangata-evocation-calm}{Calm Beneath the Waves}{3m}{Essence 1}{Reflexive}{Perilous, Withering-only}{One tick}{None}
-
+\begin{Charm}{Calm Beneath the Waves}{
+    Cost=3m,
+    Duration=One tick,
+    Keywords={Perilous, Withering-only},
+    Mins=Essence 1,
+    Type=Reflexive
+}{mangata-evocation-calm}
 As her attacker's sword swings down, the Exalt braces, and her essence flows
 through her robes to soften and redirect the blow. Strong yet flexible, the
 flowing fabric distributes the force of the attack around its wearer. After a
@@ -38,9 +45,15 @@ flowing fabric distributes the force of the attack around its wearer. After a
 this evocation to increase her soak by $(\mathrm{Essence})$. If the attack does
 not crash the wearer, her attacker loses one point of initiative. This
 evocation cannot be activated if the wearer is in initiative crash.
+\end{Charm}
 
-\Charm{mangata-evocation-2}{[Evocation 2]}{5m}{Essence 2}{Simple}{Mute, Psyche}{One scene}{None}
-
+\begin{Charm}{Evocation 2}{
+    Cost=5m,
+    Duration=One scene,
+    Keywords={Mute, Psyche},
+    Mins=Essence 2,
+    Type=Simple
+}{mangata-evocation-2}
 Just as the moon reflects the power of the sun, Mångata reflects the power of
 its Exalted wearer. The wearer suffuses the robes with her essence, causing
 subtle patterns of shape and color to play across the surface, always just out
@@ -58,10 +71,15 @@ greater. Bonus dice may only be spent on actions that are not \emph{overtly}
 hostile. For example, they could enhance an action to calm an angry mob, or to
 talk someone into a one-sided deal. They could \emph{not} enhance an action to
 imtimidate or to threaten.
+\end{Charm}
+\end{Merit}
 
-\Artifact{airstone}{The Unplanned Jewel}{Standard Air Hearthstone}{Linked}
-
+\begin{Merit}{The Unfinished Stone}{
+    Description=Standard Air Hearthstone,
+    Keywords=Linked
+}{hearthstone}
 This is a hearthstone! Hello world.
+\end{Merit}
 
 % vim: filetype=tex: textwidth=79:
 
