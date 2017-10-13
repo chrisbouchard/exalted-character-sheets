@@ -5,14 +5,20 @@
 \setmainfont[Ligatures={Common,TeX}]{Libertinus Serif}
 \setmathfont{Libertinus Math}
 
+\newfontfamily\FancyFont{Envision}
+
 % Don't indent paragraphs; separate them with whitespace.
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1em}
 
-% Reduce spacing around titles
-\titlespacing{\section}{0pt}{\parskip}{-0.5\parskip}
-\titlespacing{\subsection}{0pt}{\parskip}{-0.5\parskip}
-\titlespacing{\subsubsection}{0pt}{\parskip}{-\parskip}
+% Don't show numbers for titles, and set up formating.
+\titleformat{\chapter}{\normalfont\FancyFont\huge}{}{0pt}{}
+\titleformat{\section}{\normalfont\FancyFont\large}{}{0pt}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\scshape}{}{0pt}{}
+
+% Reduce spacing around titles.
+\titlespacing*{\section}{0pt}{0.5\parskip}{0pt}
+\titlespacing*{\subsection}{0pt}{0.5\parskip}{0pt}
 
 % URLs should be typeset in the same font as the surrouding text.
 \urlstyle{same}
@@ -27,21 +33,15 @@
 }
 
 \newcommand{\mychapter}[2]{%
-    \outline{1}[chapter:#1]{#2}%
-    \chapter*{\textsc{#2}}%
-    \label{chapter:#2}%
+    \chapter{#2}\label{chapter:#2}%
 }
 
 \newcommand{\mysection}[2]{%
-    \outline{2}[section:#1]{#2}%
-    \section*{\textsc{#2}}%
-    \label{section:#1}%
+    \section{#2}\label{section:#1}%
 }
 
 \newcommand{\mysubsection}[2]{%
-    \outline{3}[subsection:#1]{#2}%
-    \subsection*{\textsc{#2}}%
-    \label{subsection:#1}%
+    \subsection{#2}\label{subsection:#1}%
 }
 
 \newcommand{\Dots}[1]{%
@@ -60,10 +60,10 @@
         Keywords=None,%
         #2}%
     \needspace{4\baselineskip}%
-    \outline{2}[merit:\MeritLabel]{\MeritName}%
-    \section*{\textit{\textsc{\MeritName}}}\label{merit:\MeritLabel}%
+    \section{\MeritName}\label{merit:\MeritLabel}%
+    \vspace{-0.75\parskip}%
+    \subsection*{\FancyFont(\MeritDescription)}%
     \vspace{-0.5\parskip}%
-    \subsection*{\textit{\textsc{(\MeritDescription)}}}%
     \textbf{Keywords:} \MeritKeywords%
     \par\BODY%
 }
@@ -87,8 +87,8 @@
         Prerequisites=None,%
         #2}%
     \needspace{6.5\baselineskip}%
-    \outline{3}[charm:\CharmLabel]{\CharmName}%
-    \subsection*{\textsc{\CharmName}}\label{charm:\CharmLabel}%
+    \subsection{\CharmName}\label{charm:\CharmLabel}%
+    \vspace{-0.5\parskip}%
     \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins\\%
     \textbf{Type:} \CharmType\\%
     \textbf{Keywords:} \CharmKeywords\\%
