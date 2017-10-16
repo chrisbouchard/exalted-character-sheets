@@ -1,3 +1,9 @@
+% Set up bibligraphy style
+\defbibheading{bibliography}[\bibname]{\chapter{#1}}
+
+% Set the bibliography source
+\addglobalbib{SagaciousHand.bib}
+
 % Set the page size.
 \geometry{paper=letterpaper, margin=1in}
 
@@ -51,23 +57,30 @@
     \normalfont\multido{}{#1}{•}%
 }
 
+\newcommand{\NoCost}{---}
+
+\newcommand{\tldr}[1]{%
+    \textbf{#1}%
+}
+
 \makeatletter
 \define@key{MeritKeys}{Description}{\def\MeritDescription{#1}}
 \define@key{MeritKeys}{Keywords}{\def\MeritKeywords{#1}}
+\define@key{MeritKeys}{Reference}{\def\MeritReference{#1}}
 \makeatother
 
 \NewEnviron{Merit}[3]{%
-    \def\MeritName{#1}%
-    \def\MeritLabel{#3}%
     \setkeys{MeritKeys}{%
         Keywords=None,%
+        Reference=,%
         #2}%
-    \needspace{4\baselineskip}%
-    \section{\MeritName}\label{merit:\MeritLabel}%
+    \section{#1}\label{merit:#3}%
     \vspace{-0.75\parskip}%
-    {\large\FancyFont(\MeritDescription)}\\[0.5\parskip]%
-    %\vspace{-0.5\parskip}%
+    {\large\FancyFont(\MeritDescription)}\\*[0.5\parskip]%
     \textbf{Keywords:} \MeritKeywords%
+    \ifdefempty{\MeritReference}{}{%
+        \\* \textbf{Reference:} \MeritReference%
+    }%
     \par\BODY%
 }
 
@@ -78,25 +91,27 @@
 \define@key{CharmKeys}{Mins}{\def\CharmMins{#1}}
 \define@key{CharmKeys}{Prerequisites}{\def\CharmPrerequisites{#1}}
 \define@key{CharmKeys}{Type}{\def\CharmType{#1}}
+\define@key{CharmKeys}{Reference}{\def\CharmReference{#1}}
 \makeatother
 
 \NewEnviron{Charm}[3]{%
-    \def\CharmName{#1}%
-    \def\CharmLabel{#3}%
     \setkeys{CharmKeys}{%
-        Cost=--,%
+        Cost=\NoCost,%
         Keywords=None,%
         Mins=None,%
         Prerequisites=None,%
+        Reference=,%
         #2}%
-    \needspace{6.5\baselineskip}%
-    \subsection{\CharmName}\label{charm:\CharmLabel}%
+    \subsection{#1}\label{charm:#3}%
     \vspace{-0.5\parskip}%
-    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins\\%
-    \textbf{Type:} \CharmType\\%
-    \textbf{Keywords:} \CharmKeywords\\%
-    \textbf{Duration:} \CharmDuration\\%
+    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins\\*%
+    \textbf{Type:} \CharmType\\*%
+    \textbf{Keywords:} \CharmKeywords\\*%
+    \textbf{Duration:} \CharmDuration\\*%
     \textbf{Prerequisites:} \CharmPrerequisites%
+    \ifdefempty{\CharmReference}{}{%
+        \\* \textbf{Reference:} \CharmReference%
+    }%
     \par\BODY%
 }
 
