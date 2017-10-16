@@ -1,5 +1,4 @@
 BASE_NAME := SagaciousHand
-OUTPUT_DIR := output
 
 BIBFILE := $(BASE_NAME).bib
 
@@ -21,13 +20,10 @@ pdf : $(BASE_NAME).pdf
 chapters.tex : $(CHAPTER_DEPS)
 	bin/gen-input-list.sh $(CHAPTER_DIR) > $@
 
-$(OUTPUT_DIR)/$(BASE_NAME).pdf : $(BASE_NAME).tex Makefile chapters.tex $(BIBFILE) $(TEX_DEPS) $(IMAGE_DEPS)
-	mkdir -p $(OUTPUT_DIR)/$(CHAPTER_DIR)
-	latexmk -outdir=$(OUTPUT_DIR) -pdfxe -dvi- -ps- $<
-
-$(BASE_NAME).pdf : $(OUTPUT_DIR)/$(BASE_NAME).pdf
-	cp $< $@
+$(BASE_NAME).pdf : $(BASE_NAME).tex Makefile chapters.tex $(BIBFILE) $(TEX_DEPS) $(IMAGE_DEPS)
+	latexmk -pdfxe -dvi- -ps- $<
 
 clean :
-	rm -rf chapters.tex $(OUTPUT_DIR)
+	rm -f chapters.tex
+	latexmk -c
 

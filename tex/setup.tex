@@ -1,8 +1,8 @@
 % Set up bibligraphy style
-\defbibheading{bibliography}[\bibname]{\chapter{#1}}
+\defbibheading{bibliography}[\bibname]{\section{#1}}
 
 % Set the bibliography source
-\addglobalbib{SagaciousHand.bib}
+\addbibresource{SagaciousHand.bib}
 
 % Set the page size.
 \geometry{paper=letterpaper, margin=1in}
@@ -42,6 +42,7 @@
 }
 
 \newcommand{\mychapter}[2]{%
+    \newrefsection%
     \chapter{#2}\label{chapter:#2}%
 }
 
@@ -53,11 +54,19 @@
     \subsection{#2}\label{subsection:#1}%
 }
 
+\newcommand{\Val}[1]{%
+    \relax\ifmmode{\text{#1}}\else#1\fi%
+}
+
 \newcommand{\Dots}[1]{%
     \normalfont\multido{}{#1}{•}%
 }
 
 \newcommand{\NoCost}{---}
+
+\newcommand{\Pool}[1]{%
+    \( (#1) \)%
+}
 
 \newcommand{\tldr}[1]{%
     \textbf{#1}%

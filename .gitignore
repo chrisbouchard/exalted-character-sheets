@@ -1,4 +1,12 @@
 chapters.tex
-output
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
 *.pdf
+*.run.xml
+*.xdv
 
