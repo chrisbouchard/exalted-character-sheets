@@ -6,6 +6,7 @@ chapters.tex
 *.fdb_latexmk
 *.fls
 *.log
+*.ptc
 *.pdf
 *.run.xml
 *.xdv

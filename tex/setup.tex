@@ -1,5 +1,5 @@
 % Set up bibligraphy style
-\defbibheading{bibliography}[\bibname]{\section{#1}}
+\defbibheading{bibliography}[\bibname]{\section*{#1}}
 
 % Set the bibliography source
 \addbibresource{SagaciousHand.bib}
@@ -16,18 +16,17 @@
 \newcommand{\thesubtitle}{}
 \newcommand{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
 
-% Don't indent paragraphs; separate them with whitespace.
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{1em}
-
 % Don't show numbers for titles, and set up formating.
-\titleformat{\chapter}{\FancyFont\huge}{}{0pt}{}
+\titleformat{\chapter}[display]%
+    {\filcenter\normalfont\large\scshape}{\chaptertitlename\ \Numberstring{chapter}}{5pt}{\FancyFont\huge}
 \titleformat{\section}{\FancyFont\large}{}{0pt}{}
 \titleformat{\subsection}{\normalfont\large\bfseries\scshape}{}{0pt}{}
+\titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
 
 % Reduce spacing around titles.
-\titlespacing*{\section}{0pt}{0.5\parskip}{0pt}
+\titlespacing*{\section}{0pt}{1.5\parskip}{0pt}
 \titlespacing*{\subsection}{0pt}{0.5\parskip}{0pt}
+\titlespacing*{\paragraph}{0pt}{0pt}{1em}
 
 % URLs should be typeset in the same font as the surrouding text.
 \urlstyle{same}
@@ -41,7 +40,15 @@
     \THEDAY{} \monthname[\THEMONTH{}] \THEYEAR{}%
 }
 
+\newcommand{\blankpage}{%
+    \newpage%
+    \thispagestyle{empty}%
+    \mbox{}%
+    \newpage%
+}
+
 \newcommand{\mychapter}[2]{%
+    \ClearCharmList%
     \newrefsection%
     \chapter{#2}\label{chapter:#2}%
 }
@@ -62,6 +69,10 @@
     \normalfont\multido{}{#1}{•}%
 }
 
+\newcommand{\Keyword}[1]{%
+    \textbf{#1}%
+}
+
 \newcommand{\NoCost}{---}
 
 \newcommand{\Pool}[1]{%
@@ -75,22 +86,29 @@
 \makeatletter
 \define@key{MeritKeys}{Description}{\def\MeritDescription{#1}}
 \define@key{MeritKeys}{Keywords}{\def\MeritKeywords{#1}}
+\define@key{MeritKeys}{Rating}{\def\MeritRating{#1}}
 \define@key{MeritKeys}{Reference}{\def\MeritReference{#1}}
 \makeatother
 
-\NewEnviron{Merit}[3]{%
+\newcommand{\Merit}[3]{%
     \setkeys{MeritKeys}{%
-        Keywords=None,%
+        Description=,%
+        Keywords=,%
         Reference=,%
         #2}%
     \section{#1}\label{merit:#3}%
-    \vspace{-0.75\parskip}%
-    {\large\FancyFont(\MeritDescription)}\\*[0.5\parskip]%
-    \textbf{Keywords:} \MeritKeywords%
+    \ifdefempty{\MeritDescription}{}{%
+        \vspace{-0.75\parskip}%
+        \section*{(\MeritDescription)}%
+    }%
+    \vspace{-0.5\parskip}%
+    \textbf{\MeritRating}%
+    \ifdefempty{\MeritKeywords}{}{%
+        \\* \textbf{Keywords:} \MeritKeywords%
+    }%
     \ifdefempty{\MeritReference}{}{%
         \\* \textbf{Reference:} \MeritReference%
     }%
-    \par\BODY%
 }
 
 \makeatletter
@@ -103,25 +121,58 @@
 \define@key{CharmKeys}{Reference}{\def\CharmReference{#1}}
 \makeatother
 
-\NewEnviron{Charm}[3]{%
+\newcommand{\CharmList}{}
+
+\newcommand{\Charm}[3]{%
     \setkeys{CharmKeys}{%
         Cost=\NoCost,%
-        Keywords=None,%
+        Keywords=,%
         Mins=None,%
-        Prerequisites=None,%
+        Prerequisites=,%
         Reference=,%
         #2}%
     \subsection{#1}\label{charm:#3}%
     \vspace{-0.5\parskip}%
-    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins\\*%
-    \textbf{Type:} \CharmType\\*%
-    \textbf{Keywords:} \CharmKeywords\\*%
-    \textbf{Duration:} \CharmDuration\\*%
-    \textbf{Prerequisites:} \CharmPrerequisites%
+    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins%
+    \\* \textbf{Type:} \CharmType%
+    \ifdefempty{\CharmKeywords}{}{%
+        \\* \textbf{Keywords:} \CharmKeywords%
+    }%
+    \\* \textbf{Duration:} \CharmDuration%
+    \ifdefempty{\CharmPrerequisites}{}{%
+        \\* \textbf{Prerequisite Charms:} \CharmPrerequisites%
+    }%
     \ifdefempty{\CharmReference}{}{%
         \\* \textbf{Reference:} \CharmReference%
     }%
-    \par\BODY%
+    \gappto\CharmList{%
+        \nameref{charm:#3} &%
+    }%
+    \xappto\CharmList{%
+        \CharmCost &%
+        \CharmType &%
+        \CharmDuration &%
+    }%
+    \gappto\CharmList{%
+        \pageref{charm:#3} \\%
+    }%
+}
+
+\newcommand{\ClearCharmList}{%
+    \renewcommand{\CharmList}{}%
+}
+
+\newcommand{\PrintCharmList}{%
+    \begin{tabulary}{\textwidth}{lLLlr}%
+        \textbf{Name} &%
+        \textbf{Cost} &%
+        \textbf{Type} &%
+        \textbf{Duration} &%
+        \textbf{Page} \\%
+        \hline%
+        \CharmList%
+    \end{tabulary}%
+    \ClearCharmList%
 }
 
 % vim: filetype=tex: textwidth=79:

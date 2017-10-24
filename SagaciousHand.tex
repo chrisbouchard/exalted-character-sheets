@@ -1,4 +1,4 @@
-﻿\documentclass[10pt,twocolumn,oneside,openany]{book}
+﻿\documentclass[10pt,twocolumn,oneside]{book}
 
 \input{tex/packages.tex}
 \input{tex/setup.tex}
@@ -10,9 +10,16 @@
 
 \begin{document}
 
+\frontmatter
+\pagenumbering{gobble}
+
 \begin{titlepage}
     \input{tex/title.tex}
 \end{titlepage}
+
+\blankpage
+
+\mainmatter
 
 \input{chapters.tex}
 
