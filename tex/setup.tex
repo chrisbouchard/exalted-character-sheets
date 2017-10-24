@@ -1,5 +1,5 @@
 % Set up bibligraphy style
-\defbibheading{bibliography}[\bibname]{\section*{#1}}
+\defbibheading{bibliography}[\bibname]{\section{#1}}
 
 % Set the bibliography source
 \addbibresource{SagaciousHand.bib}
@@ -16,6 +16,11 @@
 \newcommand{\thesubtitle}{}
 \newcommand{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
 
+\newpagestyle{main}{%
+    \sethead{}{\chaptertitle}{}%
+    \setfoot{}{\usepage}{}%
+}
+
 % Don't show numbers for titles, and set up formating.
 \titleformat{\chapter}[display]%
     {\filcenter\normalfont\large\scshape}{\chaptertitlename\ \Numberstring{chapter}}{5pt}{\FancyFont\huge}
@@ -27,6 +32,9 @@
 \titlespacing*{\section}{0pt}{1.5\parskip}{0pt}
 \titlespacing*{\subsection}{0pt}{0.5\parskip}{0pt}
 \titlespacing*{\paragraph}{0pt}{0pt}{1em}
+
+% Increase space between table rows
+\renewcommand{\arraystretch}{1.25}
 
 % URLs should be typeset in the same font as the surrouding text.
 \urlstyle{same}
@@ -48,7 +56,6 @@
 }
 
 \newcommand{\mychapter}[2]{%
-    \ClearCharmList%
     \newrefsection%
     \chapter{#2}\label{chapter:#2}%
 }
@@ -98,7 +105,7 @@
         #2}%
     \section{#1}\label{merit:#3}%
     \ifdefempty{\MeritDescription}{}{%
-        \vspace{-0.75\parskip}%
+        \vspace*{-0.75\parskip}%
         \section*{(\MeritDescription)}%
     }%
     \vspace{-0.5\parskip}%
@@ -111,6 +118,26 @@
     }%
 }
 
+\newcommand{\CharmList}{}
+
+\newcommand{\CharmSection}[2]{%
+    \mysection{#1}{#2}%
+    \CharmGroup{section:#1}%
+}
+
+\newcommand{\CharmGroup}[1]{%
+    \ifdefempty{\CharmList}{}{%
+        \gappto\CharmList{%
+            [0.5\parskip]%
+        }%
+    }%
+    \gappto\CharmList{%
+        \multicolumn{5}{l}{%
+            \textbf{\nameref{#1}}%
+        } \\%
+    }%
+}
+
 \makeatletter
 \define@key{CharmKeys}{Cost}{\def\CharmCost{#1}}
 \define@key{CharmKeys}{Duration}{\def\CharmDuration{#1}}
@@ -120,8 +147,6 @@
 \define@key{CharmKeys}{Type}{\def\CharmType{#1}}
 \define@key{CharmKeys}{Reference}{\def\CharmReference{#1}}
 \makeatother
-
-\newcommand{\CharmList}{}
 
 \newcommand{\Charm}[3]{%
     \setkeys{CharmKeys}{%
@@ -163,7 +188,7 @@
 }
 
 \newcommand{\PrintCharmList}{%
-    \begin{tabulary}{\textwidth}{lLLlr}%
+    \begin{longtabu} to \linewidth {lX[L]X[L]X[L]r}%
         \textbf{Name} &%
         \textbf{Cost} &%
         \textbf{Type} &%
@@ -171,7 +196,7 @@
         \textbf{Page} \\%
         \hline%
         \CharmList%
-    \end{tabulary}%
+    \end{longtabu}%
     \ClearCharmList%
 }
 

@@ -1,4 +1,4 @@
-﻿\documentclass[10pt,twocolumn,oneside]{book}
+﻿\documentclass[10pt,twocolumn,twoside]{book}
 
 \input{tex/packages.tex}
 \input{tex/setup.tex}
@@ -12,14 +12,18 @@
 
 \frontmatter
 \pagenumbering{gobble}
+\pagestyle{empty}
 
 \begin{titlepage}
     \input{tex/title.tex}
 \end{titlepage}
 
+% Use \blankpage rather than \cleardoublepage so that we get a blank page even
+% in one-sided mode.
 \blankpage
 
 \mainmatter
+\pagestyle{main}
 
 \input{chapters.tex}
 

@@ -2,7 +2,7 @@
 
 % \ChapterContents
 
-\mysection{excellencies}{Excellencies}
+\CharmSection{excellencies}{Excellencies}
 
 \Charm{Solar Excellency}{
     Cost=1m per die,
@@ -27,7 +27,7 @@ used in a defense it is considered reflexive.
 
 
 
-\mysection{awareness-charms}{Awareness Charms}
+\CharmSection{awareness-charms}{Awareness Charms}
 
 \Charm{Sensory Acuity Prana}{
     Cost=5m,
@@ -84,7 +84,7 @@ well as with each other.
 
 
 
-\mysection{dodge-charms}{Dodge Charms}
+\CharmSection{dodge-charms}{Dodge Charms}
 
 \Charm{Reed in the Wind}{
     Cost=2i per 1 Evasion,
@@ -123,7 +123,7 @@ its full value, she may apply additional Dodge Charms if necessary.
 
 
 
-\mysection{lore-charms}{Lore Charms}
+\CharmSection{lore-charms}{Lore Charms}
 
 \Charm{Harmonious Academic Method}{
     Cost=\NoCost,
@@ -220,7 +220,7 @@ dissipate.
 
 
 
-\mysection{medicine-charm}{Medicine Charms}
+\CharmSection{medicine-charm}{Medicine Charms}
 
 \Charm{Ailment-Rectifying Method}{
     Cost=3m,
@@ -319,6 +319,7 @@ rest of the season.}
 
 
 \Charm{Instant Treatment Methodology}{
+    Cost={5m 1wp or 5i 1wp},
     Duration=Instant,
     Mins={Medicine 4, Essence 2},
     Prerequisites=\nameref{charm:wound-cleansing-meditation},
@@ -350,7 +351,7 @@ she calibrates her spirit. \tldr{This Charm permanently lowers the cost of the
 
 
 
-\mysection{performance-charms}{Performance Charms}
+\CharmSection{performance-charms}{Performance Charms}
 
 \Charm{Masterful Performance Exercise}{
     Cost=2m,
@@ -368,7 +369,7 @@ magic that might interfere with her performance.
 
 
 
-\mysection{resistance-charms}{Resistance Charms}
+\CharmSection{resistance-charms}{Resistance Charms}
 
 \Charm{Durability of Oak Meditation}{
     Cost=3m,
@@ -430,10 +431,13 @@ automatically change to reflect the new rating.
 \printbibliography[title=References]
 
 
-
 \onecolumn
+\pagestyle{empty}
+\cleardoublepage
 
+\pagestyle{main}
 \mysection{charm-summary}{Charm Summary}
+
 \PrintCharmList
 
 % vim: filetype=tex: textwidth=79:
