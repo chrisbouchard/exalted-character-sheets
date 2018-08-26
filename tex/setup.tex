@@ -90,6 +90,16 @@
     \textbf{#1}%
 }
 
+\newtoggle{PossibleActive}
+\global\togglefalse{PossibleActive}
+
+\NewEnviron{Possible}{%
+    \toggletrue{PossibleActive}%
+    \color{gray}%
+    \itshape%
+    \BODY%
+}
+
 \makeatletter
 \define@key{MeritKeys}{Description}{\def\MeritDescription{#1}}
 \define@key{MeritKeys}{Keywords}{\def\MeritKeywords{#1}}
@@ -170,16 +180,18 @@
     \ifdefempty{\CharmReference}{}{%
         \\* \textbf{Reference:} \CharmReference%
     }%
-    \gappto\CharmList{%
-        \nameref{charm:#3} &%
-    }%
-    \xappto\CharmList{%
-        \CharmCost &%
-        \CharmType &%
-        \CharmDuration &%
-    }%
-    \gappto\CharmList{%
-        \pageref{charm:#3} \\%
+    \iftoggle{PossibleActive}{}{%
+        \gappto\CharmList{%
+            \nameref{charm:#3} &%
+        }%
+        \xappto\CharmList{%
+            \CharmCost &%
+            \CharmType &%
+            \CharmDuration &%
+        }%
+        \gappto\CharmList{%
+            \pageref{charm:#3} \\%
+        }%
     }%
 }
 
