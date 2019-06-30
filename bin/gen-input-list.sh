@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 chapters_dir=$1
 

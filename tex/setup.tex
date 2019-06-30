@@ -2,7 +2,7 @@
 \defbibheading{bibliography}[\bibname]{\section{#1}}
 
 % Set the bibliography source
-\addbibresource{SagaciousHand.bib}
+\addbibresource{PelepsWuTian.bib}
 
 % Set the page size.
 \geometry{paper=letterpaper, margin=1in}
@@ -26,12 +26,14 @@
     {\filcenter\normalfont\large\scshape}{\chaptertitlename\ \Numberstring{chapter}}{5pt}{\FancyFont\huge}
 \titleformat{\section}{\FancyFont\large}{}{0pt}{}
 \titleformat{\subsection}{\normalfont\large\bfseries\scshape}{}{0pt}{}
+\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{}{0pt}{}[:]
 \titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
 
 % Reduce spacing around titles.
-\titlespacing*{\section}{0pt}{1.5\parskip}{0pt}
-\titlespacing*{\subsection}{0pt}{0.5\parskip}{0pt}
-\titlespacing*{\paragraph}{0pt}{0pt}{1em}
+\titlespacing*{\section}{0pt}{2\parskip}{0.5\parskip}
+\titlespacing*{\subsection}{0pt}{\parskip}{0pt}
+\titlespacing*{\subsubsection}{0pt}{\parskip}{2\wordsep}
+\titlespacing*{\paragraph}{0pt}{0pt}{2\wordsep}
 
 % Increase space between table rows
 \renewcommand{\arraystretch}{1.25}
@@ -69,7 +71,7 @@
 }
 
 \newcommand{\Val}[1]{%
-    \relax\ifmmode{\text{#1}}\else#1\fi%
+    \text{#1}%
 }
 
 \newcommand{\Dots}[1]{%
@@ -82,13 +84,15 @@
 
 \newcommand{\NoCost}{---}
 
-\newcommand{\Pool}[1]{%
-    \( (#1) \)%
+\NewDocumentCommand{\Pool}{mo}{%
+    \( (#1 \IfValueT{#2}{, \text{#2}}) \)%
 }
 
 \newcommand{\tldr}[1]{%
     \textbf{#1}%
 }
+
+\newcommand{\TBW}{\textit{To be written\ldots}}
 
 \newtoggle{PossibleActive}
 \global\togglefalse{PossibleActive}
@@ -96,7 +100,6 @@
 \NewEnviron{Possible}{%
     \toggletrue{PossibleActive}%
     \color{gray}%
-    \itshape%
     \BODY%
 }
 
@@ -115,16 +118,42 @@
         #2}%
     \section{#1}\label{merit:#3}%
     \ifdefempty{\MeritDescription}{}{%
-        \vspace*{-0.75\parskip}%
+        \vspace*{-0.25\parskip}%
         \section*{(\MeritDescription)}%
     }%
-    \vspace{-0.5\parskip}%
     \textbf{\MeritRating}%
     \ifdefempty{\MeritKeywords}{}{%
         \\* \textbf{Keywords:} \MeritKeywords%
     }%
     \ifdefempty{\MeritReference}{}{%
         \\* \textbf{Reference:} \MeritReference%
+    }%
+}
+
+\makeatletter
+\define@key{ArtifactKeys}{Attunement}{\def\ArtifactAttunement{#1}}
+\define@key{ArtifactKeys}{Type}{\def\ArtifactType{#1}}
+\define@key{ArtifactKeys}{Tags}{\def\ArtifactTags{#1}}
+\define@key{ArtifactKeys}{Hearthstone Slots}{\def\ArtifactHearthstoneSlots{#1}}
+\define@key{ArtifactKeys}{Reference}{\def\ArtifactReference{#1}}
+\makeatother
+
+\newcommand{\Artifact}[1]{%
+    \setkeys{ArtifactKeys}{%
+        Tags=,%
+        Hearthstone Slots=,%
+        Reference=,%
+        #1}%
+    \textbf{Attunement:} \ArtifactAttunement%
+    \\* \textbf{Type:} \ArtifactType%
+    \ifdefempty{\ArtifactTags}{}{%
+        \\* \textbf{Tags:} \ArtifactTags%
+    }%
+    \ifdefempty{\ArtifactHearthstoneSlots}{}{%
+        \\* \textbf{Hearthstone Slot(s):} \ArtifactHearthstoneSlots%
+    }%
+    \ifdefempty{\ArtifactReference}{}{%
+        \\* \textbf{Reference:} \ArtifactReference%
     }%
 }
 
@@ -138,7 +167,7 @@
 \newcommand{\CharmGroup}[1]{%
     \ifdefempty{\CharmList}{}{%
         \gappto\CharmList{%
-            [0.5\parskip]%
+            \\%
         }%
     }%
     \gappto\CharmList{%
@@ -167,7 +196,6 @@
         Reference=,%
         #2}%
     \subsection{#1}\label{charm:#3}%
-    \vspace{-0.5\parskip}%
     \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins%
     \\* \textbf{Type:} \CharmType%
     \ifdefempty{\CharmKeywords}{}{%
@@ -185,9 +213,9 @@
             \nameref{charm:#3} &%
         }%
         \xappto\CharmList{%
-            \CharmCost &%
-            \CharmType &%
-            \CharmDuration &%
+            \expandonce{\CharmCost} &%
+            \expandonce{\CharmType} &%
+            \expandonce{\CharmDuration} &%
         }%
         \gappto\CharmList{%
             \pageref{charm:#3} \\%

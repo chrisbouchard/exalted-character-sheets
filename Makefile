@@ -1,4 +1,4 @@
-BASE_NAME := SagaciousHand
+BASE_NAME := PelepsWuTian
 
 BIBFILE := $(BASE_NAME).bib
 
@@ -13,6 +13,8 @@ CHAPTER_DEPS := $(wildcard $(CHAPTER_DIR)/*.tex)
 
 .PHONY : all clean pdf
 
+export bibtex_use = 2
+
 all : $(BASE_NAME).pdf
 
 pdf : $(BASE_NAME).pdf
@@ -24,6 +26,6 @@ $(BASE_NAME).pdf : $(BASE_NAME).tex Makefile chapters.tex $(BIBFILE) $(TEX_DEPS)
 	latexmk -pdfxe -dvi- -ps- $<
 
 clean :
+	latexmk -C
 	rm -f chapters.tex
-	latexmk -c
 
