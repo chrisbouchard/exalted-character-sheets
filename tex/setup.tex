@@ -84,7 +84,7 @@
 
 \newcommand{\NoCost}{---}
 
-\NewDocumentCommand{\Pool}{mo}{%
+\NewDocumentCommand{\Pool}{m o}{%
     \( (#1 \IfValueT{#2}{, \text{#2}}) \)%
 }
 
@@ -94,68 +94,69 @@
 
 \newcommand{\TBW}{\textit{To be written\ldots}}
 
-\newtoggle{PossibleActive}
-\global\togglefalse{PossibleActive}
+\newcommand{\PermanentType}{Permanent}
+\newcommand{\ReflexiveType}{Reflexive}
+\newcommand{\SimpleType}{Simple}
+\newcommand{\SupplementalType}{Supplemental}
 
-\NewEnviron{Possible}{%
-    \toggletrue{PossibleActive}%
+\NewDocumentEnvironment{Unavailable}{+b}{%
     \color{gray}%
-    \BODY%
-}
+    #1%
+}{}
 
 \makeatletter
-\define@key{MeritKeys}{Description}{\def\MeritDescription{#1}}
-\define@key{MeritKeys}{Keywords}{\def\MeritKeywords{#1}}
-\define@key{MeritKeys}{Rating}{\def\MeritRating{#1}}
-\define@key{MeritKeys}{Reference}{\def\MeritReference{#1}}
-\makeatother
+\define@cmdkeys{Merit}[Merit@]{
+    Description,
+    Keywords,
+    Rating,
+    Reference
+}
 
-\newcommand{\Merit}[3]{%
-    \setkeys{MeritKeys}{%
-        Description=,%
-        Keywords=,%
-        Reference=,%
-        #2}%
+\NewDocumentEnvironment{Merit}{m m m +b}{%
+    \setkeys{Merit}{#2}%
     \section{#1}\label{merit:#3}%
-    \ifdefempty{\MeritDescription}{}{%
+    \ifdef{\Merit@Description}{%
         \vspace*{-0.25\parskip}%
-        \section*{(\MeritDescription)}%
-    }%
-    \textbf{\MeritRating}%
-    \ifdefempty{\MeritKeywords}{}{%
-        \\* \textbf{Keywords:} \MeritKeywords%
-    }%
-    \ifdefempty{\MeritReference}{}{%
-        \\* \textbf{Reference:} \MeritReference%
-    }%
-}
-
-\makeatletter
-\define@key{ArtifactKeys}{Attunement}{\def\ArtifactAttunement{#1}}
-\define@key{ArtifactKeys}{Type}{\def\ArtifactType{#1}}
-\define@key{ArtifactKeys}{Tags}{\def\ArtifactTags{#1}}
-\define@key{ArtifactKeys}{Hearthstone Slots}{\def\ArtifactHearthstoneSlots{#1}}
-\define@key{ArtifactKeys}{Reference}{\def\ArtifactReference{#1}}
+        \section*{(\Merit@Description)}%
+    }{}%
+    \textbf{\Merit@Rating}%
+    \ifdef{\Merit@Keywords}{%
+        \\* \textbf{Keywords:} \Merit@Keywords%
+    }{}%
+    \ifdef{\Merit@Reference}{%
+        \\* \textbf{Reference:} \Merit@Reference%
+    }{}%
+    \par%
+    \nopagebreak%
+    \par%
+    #4%
+}{}
 \makeatother
 
-\newcommand{\Artifact}[1]{%
-    \setkeys{ArtifactKeys}{%
-        Tags=,%
-        Hearthstone Slots=,%
-        Reference=,%
-        #1}%
-    \textbf{Attunement:} \ArtifactAttunement%
-    \\* \textbf{Type:} \ArtifactType%
-    \ifdefempty{\ArtifactTags}{}{%
-        \\* \textbf{Tags:} \ArtifactTags%
-    }%
-    \ifdefempty{\ArtifactHearthstoneSlots}{}{%
-        \\* \textbf{Hearthstone Slot(s):} \ArtifactHearthstoneSlots%
-    }%
-    \ifdefempty{\ArtifactReference}{}{%
-        \\* \textbf{Reference:} \ArtifactReference%
-    }%
+\makeatletter
+\define@cmdkeys{Artifact}[Artifact@]{
+    Attunement,
+    Type,
+    Tags,
+    HearthstoneSlots,
+    Reference
 }
+
+\NewDocumentCommand{\Artifact}{m}{%
+    \setkeys{Artifact}{#1}%
+    \textbf{Attunement:} \Artifact@Attunement%
+    \\* \textbf{Type:} \Artifact@Type%
+    \ifdef{\Artifact@Tags}{%
+        \\* \textbf{Tags:} \Artifact@Tags%
+    }{}%
+    \ifdef{\Artifact@HearthstoneSlots}{%
+        \\* \textbf{Hearthstone Slot(s):} \Artifact@HearthstoneSlots%
+    }{}%
+    \ifdef{\Artifact@Reference}{%
+        \\* \textbf{Reference:} \Artifact@Reference%
+    }{}%
+}
+\makeatother
 
 \newcommand{\CharmList}{}
 
@@ -178,50 +179,67 @@
 }
 
 \makeatletter
-\define@key{CharmKeys}{Cost}{\def\CharmCost{#1}}
-\define@key{CharmKeys}{Duration}{\def\CharmDuration{#1}}
-\define@key{CharmKeys}{Keywords}{\def\CharmKeywords{#1}}
-\define@key{CharmKeys}{Mins}{\def\CharmMins{#1}}
-\define@key{CharmKeys}{Prerequisites}{\def\CharmPrerequisites{#1}}
-\define@key{CharmKeys}{Type}{\def\CharmType{#1}}
-\define@key{CharmKeys}{Reference}{\def\CharmReference{#1}}
-\makeatother
-
-\newcommand{\Charm}[3]{%
-    \setkeys{CharmKeys}{%
-        Cost=\NoCost,%
-        Keywords=,%
-        Mins=None,%
-        Prerequisites=,%
-        Reference=,%
-        #2}%
-    \subsection{#1}\label{charm:#3}%
-    \textbf{Cost:} \CharmCost; \textbf{Mins:} \CharmMins%
-    \\* \textbf{Type:} \CharmType%
-    \ifdefempty{\CharmKeywords}{}{%
-        \\* \textbf{Keywords:} \CharmKeywords%
-    }%
-    \\* \textbf{Duration:} \CharmDuration%
-    \ifdefempty{\CharmPrerequisites}{}{%
-        \\* \textbf{Prerequisite Charms:} \CharmPrerequisites%
-    }%
-    \ifdefempty{\CharmReference}{}{%
-        \\* \textbf{Reference:} \CharmReference%
-    }%
-    \iftoggle{PossibleActive}{}{%
-        \gappto\CharmList{%
-            \nameref{charm:#3} &%
-        }%
-        \xappto\CharmList{%
-            \expandonce{\CharmCost} &%
-            \expandonce{\CharmType} &%
-            \expandonce{\CharmDuration} &%
-        }%
-        \gappto\CharmList{%
-            \pageref{charm:#3} \\%
-        }%
-    }%
+\define@cmdkeys{Charm}[Charm@]{
+    Cost,
+    Duration,
+    Keywords,
+    Mins,
+    Prerequisites,
+    Type,
+    Reference
 }
+\define@boolkeys{Charm}[Charm@]{
+    Unpurchased
+}[true]
+
+\NewDocumentEnvironment{Charm}{m m m +b}{%
+    \setkeys{Charm}{Cost=\NoCost, #2}%
+    \protected@edef\Charm@Name{#1}%
+    \protected@edef\Charm@Title{{%
+        \Charm@Name%
+        \ifbool{Charm@Unpurchased}{ (Unpurchased)}{}%
+    }}%
+    \protected@edef\Charm@Label{{charm:#3}}%
+    \def\Charm@Description{#4}%
+    \def\Charm@Body{%
+        \expandafter\subsection\Charm@Title%
+        \expandafter\label\Charm@Label%
+        \textbf{Cost:} \Charm@Cost; \textbf{Mins:} \Charm@Mins%
+        \\* \textbf{Type:} \Charm@Type%
+        \ifdef{\Charm@Keywords}{%
+            \\* \textbf{Keywords:} \Charm@Keywords%
+        }{}%
+        \\* \textbf{Duration:} \Charm@Duration%
+        \ifdef{\Charm@Prerequisites}{%
+            \\* \textbf{Prerequisite Charms:} \Charm@Prerequisites%
+        }{}%
+        \ifdef{\Charm@Reference}{%
+            \\* \textbf{Reference:} \Charm@Reference%
+        }{}%
+        \notbool{Charm@Unpurchased}{%
+            \xappto\CharmList{%
+                \noexpand\nameref\Charm@Label &%
+                \expandonce{\Charm@Cost} &%
+                \expandonce{\Charm@Type} &%
+                \expandonce{\Charm@Duration} &%
+                \noexpand\pageref\Charm@Label \noexpand\\%
+            }%
+        }{}%
+        \par%
+        \nopagebreak%
+        \par%
+        \Charm@Description%
+    }%
+    \ifbool{Charm@Unpurchased}{%
+        \begin{Unavailable}%
+            \Charm@Body%
+        \end{Unavailable}%
+    }{%
+        \Charm@Body%
+    }%
+}{}
+
+\makeatother
 
 \newcommand{\ClearCharmList}{%
     \renewcommand{\CharmList}{}%
