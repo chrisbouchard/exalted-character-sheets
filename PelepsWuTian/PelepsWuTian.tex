@@ -1,13 +1,17 @@
 ﻿\documentclass[10pt,twocolumn,twoside]{book}
 \raggedbottom
 
-\input{tex/packages.tex}
-\input{tex/setup.tex}
+\input{packages.tex}
+\input{setup.tex}
+
+% Set the bibliography source
+\addbibresource{../ExaltedBooks.bib}
 
 \title{Peleps Wu Tian}
 \subtitle{Adventuress Governor}
 \author{Mary Bouchard}
 \date{\ddmmmyyyydate\today}
+\titleimage{Peleps.png}
 
 \begin{document}
 
@@ -16,7 +20,7 @@
 \pagestyle{empty}
 
 \begin{titlepage}
-    \input{tex/title.tex}
+    \MakeExaltedTitle
 \end{titlepage}
 
 % Use \blankpage rather than \cleardoublepage so that we get a blank page even
@@ -26,7 +30,9 @@
 \mainmatter
 \pagestyle{main}
 
-\input{chapters.tex}
+\input{chapters/01_Background.tex}
+\input{chapters/02_Merits.tex}
+\input{chapters/03_Charms.tex}
 
 \end{document}
 

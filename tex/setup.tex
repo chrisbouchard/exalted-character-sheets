@@ -1,9 +1,6 @@
 % Set up bibligraphy style
 \defbibheading{bibliography}[\bibname]{\section{#1}}
 
-% Set the bibliography source
-\addbibresource{PelepsWuTian.bib}
-
 % Set the page size.
 \geometry{paper=letterpaper, margin=1in}
 
@@ -15,6 +12,10 @@
 % Store a subtitle
 \newcommand{\thesubtitle}{}
 \newcommand{\subtitle}[1]{\renewcommand{\thesubtitle}{#1}}
+
+% Store an image
+\newcommand{\thetitleimage}{}
+\newcommand{\titleimage}[1]{\renewcommand{\thetitleimage}{#1}}
 
 \newpagestyle{main}{%
     \sethead{}{\MakeUppercase{\chaptertitle}}{}%
@@ -48,6 +49,10 @@
 \newdateformat{ddmmmyyyydate}{%
     \ifshowdow\dayofweekname{\THEDAY}{\THEMONTH}{\THEYEAR}\fi
     \THEDAY{} \monthname[\THEMONTH{}] \THEYEAR{}%
+}
+
+\newcommand{\columnbreak}{%
+    \vfill\break%
 }
 
 \newcommand{\blankpage}{%
@@ -121,7 +126,9 @@
     \expandafter\label\Merit@Label%
     \ifdef{\Merit@Description}{%
         \vspace*{-0.25\parskip}%
-        \section*{(\Merit@Description)}%
+        {\FancyFont\large(\Merit@Description)}%
+        \par%
+        \vspace*{-0.5\parskip}%
     }{}%
     \textbf{\Merit@Rating}%
     \ifboolexpr{%
@@ -307,6 +314,19 @@
         \CharmList%
     \end{longtabu}%
     \ClearCharmList%
+}
+
+\newcommand{\MakeExaltedTitle}{%
+    \pdfbookmark{\thetitle: \thesubtitle}{Title Page}
+    \centering
+    {\large\scshape Exalted 3rd Edition}
+    \vfill
+    \includegraphics[height=2.5in]{\thetitleimage}\\[7em]
+    {\FancyFont\Huge\thetitle}\\[2em]
+    {\large\bfseries\scshape\thesubtitle}
+    \vfill
+    {\large\theauthor}\\[1em]
+    \thedate
 }
 
 % vim: filetype=tex: textwidth=79:
