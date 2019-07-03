@@ -114,22 +114,35 @@
 
 \NewDocumentEnvironment{Merit}{m m m +b}{%
     \setkeys{Merit}{#2}%
-    \section{#1}\label{merit:#3}%
+    \protected@edef\Merit@Title{{#1}}%
+    \protected@edef\Merit@Label{{merit:#3}}%
+    \def\Merit@Body{#4}%
+    \expandafter\section\Merit@Title%
+    \expandafter\label\Merit@Label%
     \ifdef{\Merit@Description}{%
         \vspace*{-0.25\parskip}%
         \section*{(\Merit@Description)}%
     }{}%
     \textbf{\Merit@Rating}%
-    \ifdef{\Merit@Keywords}{%
-        \\* \textbf{Keywords:} \Merit@Keywords%
-    }{}%
-    \ifdef{\Merit@Reference}{%
-        \\* \textbf{Reference:} \Merit@Reference%
-    }{}%
-    \par%
+    \ifboolexpr{%
+        test {\ifdef{\Merit@Keywords}} or%
+        test {\ifdef{\Merit@Reference}}%
+    }{%
+        \vspace{-\parskip}%
+        \begin{description}[noitemsep]%
+            \ifdef{\Merit@Keywords}{%
+                \item[Keywords:] \Merit@Keywords%
+            }{}%
+            \ifdef{\Merit@Reference}{%
+                \item[Reference:] \Merit@Reference%
+            }{}%
+        \end{description}%
+    }{
+        \par%
+    }%
     \nopagebreak%
     \par%
-    #4%
+    \Merit@Body%
 }{}
 \makeatother
 
@@ -144,19 +157,55 @@
 
 \NewDocumentCommand{\Artifact}{m}{%
     \setkeys{Artifact}{#1}%
-    \textbf{Attunement:} \Artifact@Attunement%
-    \\* \textbf{Type:} \Artifact@Type%
-    \ifdef{\Artifact@Tags}{%
-        \\* \textbf{Tags:} \Artifact@Tags%
-    }{}%
-    \ifdef{\Artifact@HearthstoneSlots}{%
-        \\* \textbf{Hearthstone Slot(s):} \Artifact@HearthstoneSlots%
-    }{}%
-    \ifdef{\Artifact@Reference}{%
-        \\* \textbf{Reference:} \Artifact@Reference%
-    }{}%
+    \begin{description}[noitemsep]%
+        \item[Attunement:] \Artifact@Attunement%
+        \item[Type:] \Artifact@Type%
+        \ifdef{\Artifact@Tags}{%
+            \item[Tags:] \Artifact@Tags%
+        }{}%
+        \ifdef{\Artifact@HearthstoneSlots}{%
+            \item[Hearthstone Slot(s):] \Artifact@HearthstoneSlots%
+        }{}%
+        \ifdef{\Artifact@Reference}{%
+            \item[Reference:] \Artifact@Reference%
+        }{}%
+    \end{description}%
 }
 \makeatother
+
+\makeatletter
+\define@cmdkeys{Hearthstone}[Hearthstone@]{
+    Keywords,
+    Type,
+    Reference
+}
+
+\NewDocumentEnvironment{Hearthstone}{m m +b}{%
+    \setkeys{Hearthstone}{#2}%
+    \protected@edef\Hearthstone@Name{#1}%
+    \protected@edef\Hearthstone@Title{{%
+        \Hearthstone@Name{} (\Hearthstone@Type{})%
+    }}%
+    \def\Hearthstone@Body{#3}%
+    \expandafter\subsection\Hearthstone@Title%
+    \ifboolexpr{%
+        test {\ifdef{\Hearthstone@Keywords}} or%
+        test {\ifdef{\Hearthstone@Reference}}%
+    }{%
+        \vspace*{0.25\parskip}%
+        \begin{description}[noitemsep]%
+            \ifdef{\Hearthstone@Keywords}{%
+                \item[Keywords:] \Hearthstone@Keywords%
+            }{}%
+            \ifdef{\Hearthstone@Reference}{%
+                \item[Reference:] \Hearthstone@Reference%
+            }{}%
+        \end{description}%
+    }{}%
+    \nopagebreak%
+    \par%
+    \Hearthstone@Body%
+}{}
 
 \newcommand{\CharmList}{}
 
@@ -204,18 +253,24 @@
     \def\Charm@Body{%
         \expandafter\subsection\Charm@Title%
         \expandafter\label\Charm@Label%
-        \textbf{Cost:} \Charm@Cost; \textbf{Mins:} \Charm@Mins%
-        \\* \textbf{Type:} \Charm@Type%
-        \ifdef{\Charm@Keywords}{%
-            \\* \textbf{Keywords:} \Charm@Keywords%
-        }{}%
-        \\* \textbf{Duration:} \Charm@Duration%
-        \ifdef{\Charm@Prerequisites}{%
-            \\* \textbf{Prerequisite Charms:} \Charm@Prerequisites%
-        }{}%
-        \ifdef{\Charm@Reference}{%
-            \\* \textbf{Reference:} \Charm@Reference%
-        }{}%
+        \vspace*{0.25\parskip}%
+        \begin{description}[noitemsep]%
+            \item[Cost:] \Charm@Cost; \textbf{Mins:}~\Charm@Mins%
+            \item[Type:] \Charm@Type%
+            \ifdef{\Charm@Keywords}{%
+                \item[Keywords:] \Charm@Keywords%
+            }{}%
+            \item[Duration:] \Charm@Duration%
+            \ifdef{\Charm@Prerequisites}{%
+                \item[Prerequisite Charms:] \Charm@Prerequisites%
+            }{}%
+            \ifdef{\Charm@Reference}{%
+                \item[Reference:] \Charm@Reference%
+            }{}%
+        \end{description}%
+        \nopagebreak%
+        \par%
+        \Charm@Description%
         \notbool{Charm@Unpurchased}{%
             \xappto\CharmList{%
                 \noexpand\nameref\Charm@Label &%
@@ -225,10 +280,6 @@
                 \noexpand\pageref\Charm@Label \noexpand\\%
             }%
         }{}%
-        \par%
-        \nopagebreak%
-        \par%
-        \Charm@Description%
     }%
     \ifbool{Charm@Unpurchased}{%
         \begin{Unavailable}%
