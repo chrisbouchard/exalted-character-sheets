@@ -2,7 +2,8 @@
 
 
 \begin{Merit}{Chrissy}{%
-    Rating=Retainers~\Dots{2},
+    Type=Retainers,
+    Rating=2,
     Reference=\cite*[p.~164]{ex3}
 }{chrissy}
     \TBW
@@ -10,7 +11,8 @@
 
 
 \begin{Merit}{Followers}{%
-    Rating=Followers~\Dots{2},
+    Type=Followers,
+    Rating=2,
     Reference=\cite*[p.~161]{ex3}
 }{followers}
     \TBW
@@ -18,7 +20,8 @@
 
 
 \begin{Merit}{Governorship of -Redacted- Isle}{%
-    Rating=Backing~\Dots{4},
+    Type=Backing,
+    Rating=4,
     Reference=\cite*[p.~159]{ex3}
 }{backing}
     \TBW
@@ -27,7 +30,8 @@
 
 \begin{Merit}{Gubernatorial Manse}{%
     Description={Standard Manse},
-    Rating=Manse~\Dots{3},
+    Type=Manse,
+    Rating=3,
     Reference=\cite*[p.~163]{ex3}
 }{manse}
     \TBW
@@ -49,8 +53,10 @@
 \end{Merit}
 
 
+\DocumentColumnBreak
 \begin{Merit}{House Stipend}{%
-    Rating=Resources~\Dots{3},
+    Type=Resources,
+    Rating=3,
     Reference=\cite*[p.~164]{ex3}
 }{house-stipend}
     \TBW
@@ -58,7 +64,8 @@
 
 
 \begin{Merit}{Influence}{%
-    Rating=Influence~\Dots{4},
+    Type=Influence,
+    Rating=4,
     Reference=\cite*[p.~162]{ex3}
 }{influence}
     \TBW
@@ -67,16 +74,25 @@
 
 \begin{Merit}{Sun-on-Water}{%
     Description={Red and Black Jade Daiklave},
-    Rating=Artifact~\Dots{3},
+    Type=Artifact,
+    Rating=3,
     Reference=\cite*[p.~159]{ex3}
 }{sun-on-water}
     \TBW
 
     \Artifact{%
         Attunement=5m,
-        Type={Medium (Accuracy +4, Damage +10, Defense +0, Overwhelming 3)},
+        Type={Medium (Accuracy +3, Damage +12, Defense +1, Overwhelming 5, Attunement 5)},
         Tags={Lethal, Melee, Balanced},
         HearthstoneSlots=1
+    }
+    \Weapon[merit:sun-on-water]{%
+        Ability=\Ability{Melee} + 1,
+        Accuracy=+3,
+        Damage=+12,
+        Defense=+1,
+        Overwhelming=5,
+        Keywords={Lethal, Melee, Balanced}
     }
 
     % \mysubsection{sun-on-water-evocations}{Evocations of Sun-on-Water}

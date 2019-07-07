@@ -1,0 +1,62 @@
+﻿\documentclass[10pt,twocolumn,twoside]{book}
+\raggedbottom
+
+\input{packages.tex}
+\input{setup.tex}
+
+% Set the bibliography source
+\addbibresource{../ExaltedBooks.bib}
+
+\title{Peleps Wu Zetian}
+\subtitle{Adventuress Governor}
+\author{Mary Bouchard}
+\date{\ddmmmyyyydate\today}
+\titleimage{Peleps.png}
+
+\DefEssence{2}
+
+\DefAttribute{Strength}{4}
+\DefAttribute{Dexterity}{5}
+\DefAttribute{Stamina}{2}
+\DefAttribute{Charisma}{4}
+\DefAttribute{Manipulation}{2}
+\DefAttribute{Appearance}{3}
+\DefAttribute{Perception}{3}
+\DefAttribute{Intelligence}{2}
+\DefAttribute{Wits}{2}
+
+\DefAbility*{Athletics}{3}
+\DefAbility*{Bureaucracy}{4}
+\DefAbility*{Dodge}{5}
+\DefAbility*{Integrity}{5}
+\DefAbility*{Investigation}{4}
+\DefAbility*{Melee}{5}
+\DefAbility*{Presence}{4}
+\DefAbility*{Ride}{3}
+\DefAbility*{Sail}{3}
+\DefAbility*{Socialize}{3}
+
+\begin{document}
+
+\frontmatter
+\pagenumbering{gobble}
+\pagestyle{empty}
+
+\begin{titlepage}
+    \MakeExaltedTitle
+\end{titlepage}
+
+\cleardoublepage
+
+\mainmatter
+\pagestyle{main}
+
+\input{chapters/00_Summary.tex}
+\input{chapters/01_Background.tex}
+\input{chapters/02_Merits.tex}
+\input{chapters/03_Charms.tex}
+
+\end{document}
+
+% vim: filetype=tex: textwidth=79:
+

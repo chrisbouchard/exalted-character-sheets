@@ -1,13 +1,16 @@
+*.armor
 *.aux
 *.bbl
 *.bcf
 *.blg
+*.charm
 *.fdb_latexmk
 *.fls
 *.log
 *.ptc
 *.pdf
 *.run.xml
+*.weapons
 *.xdv
 
 .DS_Store

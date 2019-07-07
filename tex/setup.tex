@@ -1,3 +1,5 @@
+\makeatletter
+
 % Set up bibligraphy style
 \defbibheading{bibliography}[\bibname]{\section{#1}}
 
@@ -37,7 +39,7 @@
 \titlespacing*{\paragraph}{0pt}{0pt}{2\wordsep}
 
 % Increase space between table rows
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.125}
 
 % URLs should be typeset in the same font as the surrouding text.
 \urlstyle{same}
@@ -51,7 +53,8 @@
     \THEDAY{} \monthname[\THEMONTH{}] \THEYEAR{}%
 }
 
-\newcommand{\columnbreak}{%
+
+\newcommand{\DocumentColumnBreak}{%
     \vfill\break%
 }
 
@@ -62,25 +65,43 @@
     \newpage%
 }
 
-\newcommand{\mychapter}[2]{%
+
+\NewDocumentCommand{\mychapter}{s m m}{%
+    \begingroup%
     \newrefsection%
-    \chapter{#2}\label{chapter:#2}%
+    \edef\@Star{\IfBooleanT{#1}{*}}%
+    \expandafter\chapter\@Star{#3}\label{chapter:#2}%
+    \endgroup%
 }
 
-\newcommand{\mysection}[2]{%
-    \section{#2}\label{section:#1}%
+\NewDocumentCommand{\mysection}{s m m}{%
+    \begingroup%
+    \edef\@Star{\IfBooleanT{#1}{*}}%
+    \expandafter\section\@Star{#3}\label{section:#2}%
+    \endgroup%
 }
 
-\newcommand{\mysubsection}[2]{%
-    \subsection{#2}\label{subsection:#1}%
+\NewDocumentCommand{\mysubsection}{s m m}{%
+    \begingroup%
+    \edef\@Star{\IfBooleanT{#1}{*}}%
+    \expandafter\subsection\@Star{#3}\label{subsection:#2}%
+    \endgroup%
 }
+
 
 \newcommand{\Val}[1]{%
-    \text{#1}%
+    \ifbool{mmode}{\text{#1}}{#1}%
 }
 
-\newcommand{\Dots}[1]{%
-    \normalfont\multido{}{#1}{•}%
+\NewDocumentCommand{\Dots}{o m}{%
+    \multido{}{#2}{\textbullet\hspace{1pt}}%
+    \IfValueT{#1}{%
+        \ifnumgreater{#1}{#2}{%
+            \begin{Unavailable}%
+                \multido{}{\numexpr#1 - #2}{\textopenbullet\hspace{1pt}}%
+            \end{Unavailable}%
+        }{}%
+    }%
 }
 
 \newcommand{\Keyword}[1]{%
@@ -89,32 +110,40 @@
 
 \newcommand{\NoCost}{---}
 
-\NewDocumentCommand{\Pool}{m o}{%
-    \( (#1 \IfValueT{#2}{, \text{#2}}) \)%
+\NewDocumentCommand{\Pool}{s o m o}{%
+    \IfBooleanTF{#1}{%
+        (#3\IfValueT{#4}{, #4})\IfValueT{#2}{#2}%
+    }{%
+        \( (#3 \IfValueT{#4}{, \text{#4}})\IfValueT{#2}{\text{#2}} \)%
+    }%
 }
 
+
 \newcommand{\tldr}[1]{%
-    \textbf{#1}%
+    {\color{red} #1}%
 }
 
 \newcommand{\TBW}{\textit{To be written\ldots}}
+
 
 \newcommand{\PermanentType}{Permanent}
 \newcommand{\ReflexiveType}{Reflexive}
 \newcommand{\SimpleType}{Simple}
 \newcommand{\SupplementalType}{Supplemental}
 
+
 \NewDocumentEnvironment{Unavailable}{+b}{%
     \color{gray}%
     #1%
 }{}
 
-\makeatletter
+
 \define@cmdkeys{Merit}[Merit@]{
     Description,
     Keywords,
     Rating,
-    Reference
+    Reference,
+    Type
 }
 
 \NewDocumentEnvironment{Merit}{m m m +b}{%
@@ -130,30 +159,19 @@
         \par%
         \vspace*{-0.5\parskip}%
     }{}%
-    \textbf{\Merit@Rating}%
-    \ifboolexpr{%
-        test {\ifdef{\Merit@Keywords}} or%
-        test {\ifdef{\Merit@Reference}}%
-    }{%
-        \vspace{-\parskip}%
-        \begin{description}[noitemsep]%
-            \ifdef{\Merit@Keywords}{%
-                \item[Keywords:] \Merit@Keywords%
-            }{}%
-            \ifdef{\Merit@Reference}{%
-                \item[Reference:] \Merit@Reference%
-            }{}%
-        \end{description}%
-    }{
-        \par%
-    }%
-    \nopagebreak%
-    \par%
+    \begin{description}[noitemsep]%
+        \item[\Merit@Type] \Dots{\Merit@Rating}%
+        \ifdef{\Merit@Keywords}{%
+            \item[Keywords:] \Merit@Keywords%
+        }{}%
+        \ifdef{\Merit@Reference}{%
+            \item[Reference:] \Merit@Reference%
+        }{}%
+    \end{description}%
     \Merit@Body%
 }{}
-\makeatother
 
-\makeatletter
+
 \define@cmdkeys{Artifact}[Artifact@]{
     Attunement,
     Type,
@@ -178,9 +196,8 @@
         }{}%
     \end{description}%
 }
-\makeatother
 
-\makeatletter
+
 \define@cmdkeys{Hearthstone}[Hearthstone@]{
     Keywords,
     Type,
@@ -209,32 +226,62 @@
             }{}%
         \end{description}%
     }{}%
-    \nopagebreak%
-    \par%
     \Hearthstone@Body%
 }{}
 
-\newcommand{\CharmList}{}
 
-\newcommand{\CharmSection}[2]{%
+\gdef\CharmList{}
+
+\AtEndDocument{%
+    \newwrite\CharmList@Write
+    \immediate\openout\CharmList@Write=\jobname.charm
+
+    \write\CharmList@Write{%
+        \expandonce\CharmList%
+    }
+}
+
+\newcommand{\PrintCharmList}{%
+    \begin{xltabular}{\linewidth}{%
+        l%
+        >{\RaggedRight}X%
+        >{\RaggedRight}X%
+        >{\RaggedRight}X%
+        c%
+    }%
+        \textbf{Name} &%
+        \textbf{Cost} &%
+        \textbf{Type} &%
+        \textbf{Duration} &%
+        \textbf{Page} \\%
+        \hline%
+        \endhead%
+        \@input{\jobname.charm}%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintCharmListSection}{m}{%
+    \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+    {\bfseries\scshape\nameref{#1}} \\*%
+}
+
+\NewDocumentCommand{\PrintCharmListRow}{m m m m}{%
+    \nameref{#1} & #2 & #3 & #4 & \pageref{#1} \\%
+}
+
+
+\NewDocumentCommand{\CharmSection}{m m}{%
     \mysection{#1}{#2}%
     \CharmGroup{section:#1}%
 }
 
-\newcommand{\CharmGroup}[1]{%
-    \ifdefempty{\CharmList}{}{%
-        \gappto\CharmList{%
-            \\%
-        }%
-    }%
-    \gappto\CharmList{%
-        \multicolumn{5}{l}{%
-            \textbf{\nameref{#1}}%
-        } \\%
+\NewDocumentCommand{\CharmGroup}{m}{%
+    \xappto\CharmList{%
+        \noexpand\PrintCharmListSection{#1}%
     }%
 }
 
-\makeatletter
+
 \define@cmdkeys{Charm}[Charm@]{
     Cost,
     Duration,
@@ -255,11 +302,11 @@
         \Charm@Name%
         \ifbool{Charm@Unpurchased}{ (Unpurchased)}{}%
     }}%
-    \protected@edef\Charm@Label{{charm:#3}}%
+    \protected@edef\Charm@Label{charm:#3}%
     \def\Charm@Description{#4}%
     \def\Charm@Body{%
         \expandafter\subsection\Charm@Title%
-        \expandafter\label\Charm@Label%
+        \expandafter\label\expandafter{\Charm@Label}%
         \vspace*{0.25\parskip}%
         \begin{description}[noitemsep]%
             \item[Cost:] \Charm@Cost; \textbf{Mins:}~\Charm@Mins%
@@ -275,18 +322,7 @@
                 \item[Reference:] \Charm@Reference%
             }{}%
         \end{description}%
-        \nopagebreak%
-        \par%
         \Charm@Description%
-        \notbool{Charm@Unpurchased}{%
-            \xappto\CharmList{%
-                \noexpand\nameref\Charm@Label &%
-                \expandonce{\Charm@Cost} &%
-                \expandonce{\Charm@Type} &%
-                \expandonce{\Charm@Duration} &%
-                \noexpand\pageref\Charm@Label \noexpand\\%
-            }%
-        }{}%
     }%
     \ifbool{Charm@Unpurchased}{%
         \begin{Unavailable}%
@@ -294,27 +330,16 @@
         \end{Unavailable}%
     }{%
         \Charm@Body%
+        \xappto\CharmList%
+            {\noexpand\PrintCharmListRow%
+                {\Charm@Label}%
+                {\expandonce{\Charm@Cost}}%
+                {\expandonce{\Charm@Type}}%
+                {\expandonce{\Charm@Duration}}%
+        }%
     }%
 }{}
 
-\makeatother
-
-\newcommand{\ClearCharmList}{%
-    \renewcommand{\CharmList}{}%
-}
-
-\newcommand{\PrintCharmList}{%
-    \begin{longtabu} to \linewidth {lX[L]X[L]X[L]r}%
-        \textbf{Name} &%
-        \textbf{Cost} &%
-        \textbf{Type} &%
-        \textbf{Duration} &%
-        \textbf{Page} \\%
-        \hline%
-        \CharmList%
-    \end{longtabu}%
-    \ClearCharmList%
-}
 
 \newcommand{\MakeExaltedTitle}{%
     \pdfbookmark{\thetitle: \thesubtitle}{Title Page}
@@ -328,6 +353,339 @@
     {\large\theauthor}\\[1em]
     \thedate
 }
+
+
+
+\define@cmdkeys{Weapon}[Weapon@]{
+    Ability,
+    Accuracy,
+    Damage,
+    Defense,
+    Keywords,
+    Name,
+    Overwhelming,
+    Range
+}
+
+
+\gdef\WeaponList{}
+\newtoggle{HasRangedWeapons}
+
+\AtEndDocument{%
+    \newwrite\WeaponList@Write
+    \immediate\openout\WeaponList@Write=\jobname.weapons
+
+    \write\WeaponList@Write{%
+        \noexpand\PrintWeaponListHeader%
+        \iftoggle{HasRangedWeapons}{*}{}%
+        \expandonce\WeaponList%
+    }
+}
+
+\NewDocumentCommand{\PrintWeaponList}{}{%
+    \begin{xltabular}{\linewidth}{%
+            >{\RaggedRight}X l ccccccccc
+        }%
+        \@input{\jobname.weapons}%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintWeaponListHeader}{s}{%
+    \textbf{Name} &%
+    \IfBooleanT{#1}{\textbf{Range}} &%
+    \textbf{Acc} &%
+    \textbf{Dmg} &%
+    \textbf{Def} &%
+    \textbf{Ovw} &%
+    \textbf{Wth Pool} &%
+    \textbf{Wth Dmg} &%
+    \textbf{Dec Pool} &%
+    \textbf{Parry} &%
+    \textbf{Page} \\%
+    \hline%
+    \endhead%
+}
+
+\NewDocumentCommand{\PrintWeaponListMainRow}{s o m}{%
+    \setkeys{Weapon}{#3}%
+    \edef\Row{%
+        \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip+3pt}}%
+        \noexpand\textbf{\IfValueTF{#2}{\noexpand\nameref{#2}}{\Weapon@Name}} &%
+        \ifdef{\Weapon@Range}{\Weapon@Range}{} &
+        \Weapon@Accuracy &
+        \Weapon@Damage &
+        \ifdef{\Weapon@Defense}{\Weapon@Defense}{---} &
+        \Weapon@Overwhelming &
+        \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} &
+        +\Weapon@WitheringDamage{\Weapon@Damage} &
+        \Weapon@DecisivePool{\Weapon@Ability} &
+        \ifdef{\Weapon@Defense}{
+            \Weapon@ParryDV{\Weapon@Ability}{\Weapon@Defense}
+        }{%
+            ---%
+        } & %
+        \IfValueT{#2}{\noexpand\pageref{#2}}%
+    }%
+    \Row%
+}
+
+\NewDocumentCommand{\PrintWeaponListContinuationRow}{m}{%
+    \\*%
+    \setkeys{Weapon}{#1}%
+    & \Weapon@Range& \Weapon@Accuracy& & & &%
+    \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} \\%
+}
+
+\NewExpandableDocumentCommand{\PrintWeaponListKeywordsRow}{m}{%
+    \\*%
+    \multicolumn{11}{l}{%
+        \hspace{1em}\textbf{Keywords:} #1%
+    }%
+}
+
+\NewDocumentCommand{\PrintWeaponListEndRow}{}{%
+    \\%
+}
+
+
+\NewDocumentCommand{\Weapon@WitheringPool}{m m}{%
+    \the\numexpr(\Attribute{Dexterity}) + (#1) + (#2)%
+}
+
+\NewDocumentCommand{\Weapon@WitheringDamage}{m}{%
+    \the\numexpr(\Attribute{Strength}) + (#1)%
+}
+
+\NewDocumentCommand{\Weapon@DecisivePool}{m}{%
+    \the\numexpr(\Attribute{Dexterity}) + (#1)%
+}
+
+\NewDocumentCommand{\Weapon@ParryDV}{m m}{%
+    \the\numexpr( (\Attribute{Dexterity}) + (#1) ) / 2 + (#2)%
+}
+
+
+\NewDocumentCommand{\Weapon}{o m}{%
+    \setkeys{Weapon}{#2}%
+    \ifdef{\Weapon@Range}{%
+        \global\toggletrue{HasRangedWeapons}%
+    }{}%
+    \xappto\WeaponList{%
+        \noexpand\PrintWeaponListMainRow%
+                \ifdefempty{\WeaponList}{*}{}%
+                \IfValueT{#1}{[#1]}{%
+            #2%
+        }%
+        \ifdef{\Weapon@Keywords}{%
+            \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
+        }{}%
+        \noexpand\PrintWeaponListEndRow%
+    }%
+}
+
+
+\define@cmdkeys{RangedWeapon}[RangedWeapon@]{
+    Close,
+    Short,
+    Medium,
+    Long,
+    Extreme
+}
+
+\NewDocumentCommand{\RangedWeapon}{o m m}{%
+    \setkeys{Weapon}[Accuracy, Range]{#2}%
+    \setkeys{RangedWeapon}{#3}%
+    \xappto\WeaponList{%
+        \noexpand\PrintWeaponListMainRow%
+                \ifdefempty{\WeaponList}{*}{}%
+                \IfValueT{#1}{[#1]}{%
+            #2,%
+            Range=Close,%
+            Accuracy=\RangedWeapon@Close%
+        }%
+        \ifdef{\RangedWeapon@Short}{%
+            \noexpand\PrintWeaponListContinuationRow{#2,%
+                Range=Short,%
+                Accuracy=\RangedWeapon@Short%
+            }%
+        }%
+        \ifdef{\RangedWeapon@Medium}{%
+            \noexpand\PrintWeaponListContinuationRow{#2,%
+                Range=Medium,%
+                Accuracy=\RangedWeapon@Medium%
+            }%
+        }%
+        \ifdef{\RangedWeapon@Long}{%
+            \noexpand\PrintWeaponListContinuationRow{#2,%
+                Range=Long,%
+                Accuracy=\RangedWeapon@Long%
+            }%
+        }%
+        \ifdef{\RangedWeapon@Extreme}{%
+            \noexpand\PrintWeaponListContinuationRow{#2,%
+                Range=Extreme,%
+                Accuracy=\RangedWeapon@Extreme%
+            }%
+        }%
+        \ifdef{\Weapon@Keywords}{%
+            \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
+        }{}%
+        \noexpand\PrintWeaponListEndRow%
+    }%
+}
+
+
+\NewDocumentCommand{\EssenceDots}{o}{%
+    \Dots[#1]{\Essence}%
+}
+
+\NewDocumentCommand{\EssenceVal}{}{%
+    \Val{Essence}[\Essence]%
+}
+
+\NewDocumentCommand{\DefEssence}{m}{%
+    \gdef\Essence{#1}%
+}
+
+
+
+\NewDocumentCommand{\Attribute}{m}{%
+    \ifcsdef{Attribute@#1}{\csuse{Attribute@#1}}{0}%
+}
+
+\NewDocumentCommand{\AttributeDots}{o m}{%
+    \Dots[#1]{\Attribute{#2}}%
+}
+
+\NewDocumentCommand{\AttributeVal}{m}{%
+    \Val{#1}[\Attribute{#1}]%
+}
+
+\NewDocumentCommand{\DefAttribute}{m m}{%
+    \csgdef{Attribute@#1}{#2}%
+}
+
+\NewDocumentCommand{\PrintAttributeList}{}{%
+    \begin{xltabular}{\linewidth}{%
+        @{\extracolsep{\fill}}%
+        >{\bfseries}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        >{\bfseries}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        >{\bfseries}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+    }%
+        \PrintAttributeList@Row{Strength} &%
+        \PrintAttributeList@Row{Charisma} &%
+        \PrintAttributeList@Row{Perception} \\%
+        \PrintAttributeList@Row{Dexterity} &%
+        \PrintAttributeList@Row{Manipulation} &%
+        \PrintAttributeList@Row{Intelligence} \\%
+        \PrintAttributeList@Row{Stamina} &%
+        \PrintAttributeList@Row{Appearance} &%
+        \PrintAttributeList@Row{Wits} \\%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintAttributeList@Row}{m}{%
+    #1 & \AttributeDots[5]{#1}%
+}
+
+
+
+\gdef\AbilityList{}
+
+\NewDocumentCommand{\Ability}{m}{%
+    \ifcsdef{Ability@#1}{\csuse{Ability@#1}}{0}%
+}
+
+\NewDocumentCommand{\AbilityDots}{o m}{%
+    \Dots[#1]{\Ability{#2}}%
+}
+
+\NewDocumentCommand{\IfAbilityFavored}{m m m}{%
+    \providetoggle{Ability@#1@Favored}%
+    \iftoggle{Ability@#1@Favored}{#2}{#3}%
+}
+
+\NewDocumentCommand{\AbilityVal}{m}{%
+    \Val{#1}[\Ability{#1}]%
+}
+
+\NewDocumentCommand{\DefAbility}{s m m}{%
+    \csgdef{Ability@#2}{#3}%
+    \IfBooleanT{#1}{%
+        \global\newtoggle{Ability@#2@Favored}%
+        \global\toggletrue{Ability@#2@Favored}%
+    }%
+    \listadd{\AbilityList}{#2}%
+}
+
+\NewDocumentCommand{\PrintAbilityList}{}{%
+    \begin{xltabular}{\linewidth}{%
+        @{}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        r @{\extracolsep{1ex}} l%
+        @{\extracolsep{\fill}}%
+        r @{\extracolsep{1ex}} l%
+        @{}%
+    }%
+        \multicolumn{2}{c}{\bfseries\scshape\small Air} &%
+        \multicolumn{2}{c}{\bfseries\scshape\small Earth} &%
+        \multicolumn{2}{c}{\bfseries\scshape\small Fire} &%
+        \multicolumn{2}{c}{\bfseries\scshape\small Water} &%
+        \multicolumn{2}{c}{\bfseries\scshape\small Wood} \\[1pt]%
+        %
+        \PrintAbilityList@Row{Linguistics} &%
+        \PrintAbilityList@Row{Awareness} &%
+        \PrintAbilityList@Row{Athletics} &%
+        \PrintAbilityList@Row{Brawl} &%
+        \PrintAbilityList@Row{Archery} \\%
+        %
+        \PrintAbilityList@Row{Lore} &%
+        \PrintAbilityList@Row{Craft} &%
+        \PrintAbilityList@Row{Dodge} &%
+        \PrintAbilityList@Row{Bureaucracy} &%
+        \PrintAbilityList@Row{Medicine} \\%
+        %
+        \PrintAbilityList@Row{Occult} &%
+        \PrintAbilityList@Row{Integrity} &%
+        \PrintAbilityList@Row{Melee} &%
+        \PrintAbilityList@Row{Investigation} &%
+        \PrintAbilityList@Row{Performance} \\%
+        %
+        \PrintAbilityList@Row{Stealth} &%
+        \PrintAbilityList@Row{Resistance} &%
+        \PrintAbilityList@Row{Presence} &%
+        \PrintAbilityList@Row{Larceny} &%
+        \PrintAbilityList@Row{Ride} \\%
+        %
+        \PrintAbilityList@Row{Thrown} &%
+        \PrintAbilityList@Row{War} &%
+        \PrintAbilityList@Row{Socialize} &%
+        \PrintAbilityList@Row{Martial Arts} &%
+        \PrintAbilityList@Row{Survival} \\%
+        %
+        & &  & &  & &
+        \PrintAbilityList@Row{Sail} \\%
+
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintAbilityList@Row}{m}{%
+    \IfAbilityFavored{#1}{\bfseries}{}#1 &%
+    \AbilityDots[5]{#1}%
+}
+
+\makeatother
 
 % vim: filetype=tex: textwidth=79:
 
