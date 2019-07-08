@@ -32,7 +32,7 @@
         With Athletics 5, Essence 3, the Dragon-Blood may expend her Fire Aura when
         she reflexively moves to pursue an enemy after successfully rushing him with
         this Charm to ignite a fiery trail behind her, an environmental hazard with
-        difficulty 3 and Damage~\Pool[L/round]{\EssenceVal/2}[rounded up]. It burns
+        difficulty 3 and Damage~\Pool[L/round]{\StatVal{Essence}/2}[rounded up]. It burns
         until the end of the round unless the Dragon-Blood crossed over a flammable
         surface such as a wooden floor or grass, which ignites until extinguished or
         end of scene.
@@ -69,8 +69,8 @@
 }{confluence-of-savant-thought}
     The Dragon-Blood's understanding of bureaucracies is vast, encompassing the
     myriad ways in which mercantile and administrative tasks pool and eddy like
-    water. \tldr{She rolls \Pool{\AttributeVal{Intelligence} +
-    \AbilityVal{Bureaucracy}} to introduce a fact~\parencite*[p.~237]{ex3}
+    water. \tldr{She rolls \Pool{\StatVal{Intelligence} +
+    \StatVal{Bureaucracy}} to introduce a fact~\parencite*[p.~237]{ex3}
     about a bureaucratic or mercantile organization that she belongs to or is
     familiar with.}
 \end{Charm}
@@ -108,10 +108,10 @@
     bureaucracy, channeling its labor into efficacious speed. \tldr{This Charm
     enhances a project~\parencite*[p.~226]{ex3} or other bureaucratic task,
     multiplying the speed at which the organization makes progress by
-    \Pool*{highest of \AttributeVal{Charisma}, \AttributeVal{Manipulation},
-    or \AttributeVal{Intelligence}}.} The Attribute she uses must match her
+    \Pool*{highest of \StatVal{Charisma}, \StatVal{Manipulation},
+    or \StatVal{Intelligence}}.} The Attribute she uses must match her
     leadership style. This Charm cannot speed a bureaucratic task that would
-    normally take more than \Pool{\EssenceVal} years.
+    normally take more than \Pool{\StatVal{Essence}} years.
 \end{Charm}
 
 
@@ -128,7 +128,7 @@
 }{permeating-insight}
     Deceit, lies, and obfuscation won't avail fugitives from the Dragon-Blood's
     justice. Their sins are as pellucid as crystal in her eyes. \tldr{She adds
-    \Pool{\EssenceVal} non-Charm dice on a roll to profile a
+    \Pool{\StatVal{Essence}} non-Charm dice on a roll to profile a
     character~\parencite*[p.~225]{ex3}. If she succeeds, she gains a temporary
     Investigation specialty in the profiled character.} She retains the specialty
     indefinitely, but may only have one specialty granted by this Charm at a time.
@@ -147,7 +147,7 @@
     Even if a murder washes the blood from his hands, the smell of iniquity that
     clings to his heart draws the magistrate to him. The Dragon-Blood doubles 9s on
     an Awareness, Investigation, or Survival roll to detect the presence of a
-    character that has made a Larceny roll in the last \Pool{\EssenceVal} hours.
+    character that has made a Larceny roll in the last \Pool{\StatVal{Essence}} hours.
     She can determine whether or not a given individual is the source of the guilt
     by successfully profiling him.
 \end{Charm}
@@ -175,7 +175,7 @@
 
 \begin{Charm}{Bloodhound's Nose Technique}{%
     Cost=4m 1wp,
-    Duration={\Pool[~days]{\EssenceVal}},
+    Duration={\Pool[~days]{\StatVal{Essence}}},
     Keywords=Water/Wood,
     Mins={Investigation 4, Essence 2},
     Prerequisites=\nameref{charm:scent-of-crime-method},
@@ -231,7 +231,7 @@
     Reference=\cite*[p.~225]{db}
 }{burning-fury-wreath}
     The Dragon-Blood's superheated edge cuts through armor as though it were ice.
-    \tldr{She ignores \Pool{\AttributeVal{Strength}/2}[rounded up] points of Hardness, plus
+    \tldr{She ignores \Pool{\StatVal{Strength}/2}[rounded up] points of Hardness, plus
     an additional point for every 10 on her attack roll.}
 
     \tldr{In Fire Aura, double the Hardness ignored.}
@@ -266,9 +266,9 @@
     Sparks fly from the Dragon-Blood's weapon as it wards off an attack, blinding
     her foes. \tldr{Successfully blocking an attack or winning a clash from close
     range blinds her attacher~\parencite*[p.~168]{ex3} until the end of his next
-    turn unless he succeeds on a \Pool{\AttributeVal{Stamina} +
-    \AbilityVal{Resistance}} roll at a difficulty of
-    \Pool{\Val{her \EssenceVal} + \Val{the successes he missed by}}.}
+    turn unless he succeeds on a \Pool{\StatVal{Stamina} +
+    \StatVal{Resistance}} roll at a difficulty of
+    \Pool{\Val{her \StatVal{Essence}} + \Val{the successes he missed by}}.}
 \end{Charm}
 
 
@@ -282,9 +282,9 @@
     Reference=\cite*[p.~225]{db}
 }{crimson-fang-bite}
     The Dragon-Blood channels the fury of the flame to strike a devastating blow.
-    \tldr{She adds \Pool*{higher of \EssenceVal{} or \AttributeVal{Strength}}
+    \tldr{She adds \Pool*{higher of \StatVal{Essence} or \StatVal{Strength}}
     to the raw damage of a \Keyword{withering} attack, or doubles
-    \Pool{\AttributeVal{Strength}} 10s on a \Keyword{decisive} damage roll.}
+    \Pool{\StatVal{Strength}} 10s on a \Keyword{decisive} damage roll.}
 \end{Charm}
 
 

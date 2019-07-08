@@ -24,6 +24,7 @@ $(BASENAME).pdf : $(BASENAME).tex \
 
 clean :
 	latexmk -C $(BASENAME).tex
+	rm -f $(BASENAME).armor
 	rm -f $(BASENAME).bbl
 	rm -f $(BASENAME).charm
 	rm -f $(BASENAME).run.xml

@@ -60,6 +60,12 @@
     Reference=\cite*[p.~164]{ex3}
 }{house-stipend}
     \TBW
+
+    \Armor{%
+        Name=Chain Shirt,
+        Soak=3,
+        Keywords={Concealable}
+    }
 \end{Merit}
 
 
@@ -87,10 +93,10 @@
         HearthstoneSlots=1
     }
     \Weapon[merit:sun-on-water]{%
-        Ability=\Ability{Melee} + 1,
-        Accuracy=+3,
-        Damage=+12,
-        Defense=+1,
+        Ability=\Stat{Melee} + 1,
+        Accuracy=3,
+        Damage=12,
+        Defense=1,
         Overwhelming=5,
         Keywords={Lethal, Melee, Balanced}
     }

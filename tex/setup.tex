@@ -89,9 +89,6 @@
 }
 
 
-\newcommand{\Val}[1]{%
-    \ifbool{mmode}{\text{#1}}{#1}%
-}
 
 \NewDocumentCommand{\Dots}{o m}{%
     \multido{}{#2}{\textbullet\hspace{1pt}}%
@@ -104,11 +101,32 @@
     }%
 }
 
-\newcommand{\Keyword}[1]{%
-    \textbf{#1}%
+\NewDocumentCommand{\Modifier}{t- o m}{%
+    \begingroup%
+        \ifnumless{#3}{0}{%
+            \protected@edef\@Modifier{\the\numexpr#3}%
+        }{}%
+        \ifnumgreater{#3}{0}{%
+            \protected@edef\@Modifier{+\the\numexpr#3}%
+        }{}%
+        \ifnumequal{#3}{0}{%
+            \IfBooleanTF{#1}{%
+                \protected@edef\@Modifier{-0}%
+            }{%
+                \protected@edef\@Modifier{+0}%
+            }%
+        }{}%
+        \ifbool{mmode}{%
+            \@Modifier\IfValueT{#2}{\text{#2}}%
+        }{%
+            \( \@Modifier\IfValueT{#2}{\text{#2}} \)%
+        }%
+    \endgroup%
 }
 
-\newcommand{\NoCost}{---}
+\NewDocumentCommand{\Val}{m}{%
+    \ifbool{mmode}{\text{#1}}{#1}%
+}
 
 \NewDocumentCommand{\Pool}{s o m o}{%
     \IfBooleanTF{#1}{%
@@ -117,6 +135,15 @@
         \( (#3 \IfValueT{#4}{, \text{#4}})\IfValueT{#2}{\text{#2}} \)%
     }%
 }
+
+
+
+\newcommand{\Keyword}[1]{%
+    \textbf{#1}%
+}
+
+\newcommand{\NoCost}{---}
+
 
 
 \newcommand{\tldr}[1]{%
@@ -261,7 +288,7 @@
 }
 
 \NewDocumentCommand{\PrintCharmListSection}{m}{%
-    \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+    \rule{0pt}{\dimexpr\normalbaselineskip + 2pt}%
     {\bfseries\scshape\nameref{#1}} \\*%
 }
 
@@ -356,6 +383,122 @@
 
 
 
+\define@cmdkeys{Armor}[Armor@]{
+    Hardness,
+    Keywords,
+    MobilityPenalty,
+    Name,
+    Soak
+}
+
+\gdef\ArmorList{}
+
+\gdef\Armor@TotalSoak{0}
+\gdef\Armor@TotalHardness{0}
+\gdef\Armor@TotalMobilityPenalty{0}
+
+\AtEndDocument{
+    \Armor{%
+        Name=Natural Soak,
+        Soak=\Stat{Stamina}
+    }
+
+    \newwrite\ArmorList@Write
+    \immediate\openout\ArmorList@Write=\jobname.armor
+
+    \write\ArmorList@Write{%
+        \expandonce\ArmorList%
+        \noexpand\PrintArmorListTotalRow%
+            {\Armor@TotalSoak}%
+            {\Armor@TotalHardness}%
+            {\Armor@TotalMobilityPenalty}%
+    }
+}
+
+\NewDocumentCommand{\PrintArmorList}{}{%
+    \begin{xltabular}{\linewidth}{%
+            >{\RaggedRight}X cccc
+        }%
+    \bfseries\scshape Armor &%
+    \bfseries Soak &%
+    \bfseries Hardness &%
+    \bfseries MP &
+    \bfseries Page \\%
+    \hline%
+    \endhead%
+        \@input{\jobname.armor}%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintArmorListMainRow}{s o m}{%
+    \begingroup%
+        \setkeys{Armor}{#3}%
+        \xdef\Armor@Row{%
+            \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip + 2pt}}%
+            \IfValueTF{#2}{\noexpand\itshape\noexpand\nameref{#2}}{\Armor@Name} &%
+            \Armor@Soak &%
+            \ifdef{\Armor@Hardness}{\Armor@Hardness}{0} &%
+            \ifdef{\Armor@MobilityPenalty}{\Modifier-{\Armor@MobilityPenalty}}{\Modifier-{0}} &%
+            \IfValueTF{#2}{\noexpand\pageref{#2}}{---}%
+        }%
+    \endgroup%
+    \Armor@Row%
+}
+
+\NewExpandableDocumentCommand{\PrintArmorListKeywordsRow}{m}{%
+    \\*%
+    \multicolumn{5}{l}{%
+        \hspace{1em}\textbf{Keywords:} #1%
+    }%
+}
+
+\NewDocumentCommand{\PrintArmorListEndRow}{}{%
+    \\%
+}
+
+\NewDocumentCommand{\PrintArmorListTotalRow}{m m m}{%
+    \rule{0pt}{\dimexpr\normalbaselineskip + 2pt}%
+    \bfseries Total &%
+    \bfseries #1 &
+    \bfseries #2 &
+    \bfseries \Modifier-{#3} \\%
+}
+
+
+\NewDocumentCommand{\Armor}{o m}{%
+    \begingroup%
+        \setkeys{Armor}{#2}%
+        \numgdef\Armor@TotalSoak{%
+            \Armor@TotalSoak + (\Armor@Soak)%
+        }%
+        \ifdef{\Armor@Hardness}{%
+            \ifnumgreater{\Armor@Hardness}{\Armor@TotalHardness}{%
+                \numgdef\Armor@TotalHardness{%
+                    (\Armor@Hardness)%
+                }%
+            }{}%
+        }{}%
+        \ifdef{\Armor@MobilityPenalty}{%
+            \numgdef\Armor@TotalMobilityPenalty{%
+                \Armor@TotalMobilityPenalty + (\Armor@MobilityPenalty)%
+            }%
+        }{}%
+        \xappto\ArmorList{%
+            \noexpand\PrintArmorListMainRow%
+                    \ifdefempty{\ArmorList}{*}{}%
+                    \IfValueT{#1}{[#1]}{%
+                #2%
+            }%
+            \ifdef{\Armor@Keywords}{%
+                \noexpand\PrintArmorListKeywordsRow{\expandonce{\Armor@Keywords}}%
+            }{}%
+            \noexpand\PrintArmorListEndRow%
+        }%
+    \endgroup%
+}
+
+
+
 \define@cmdkeys{Weapon}[Weapon@]{
     Ability,
     Accuracy,
@@ -367,11 +510,20 @@
     Range
 }
 
-
 \gdef\WeaponList{}
 \newtoggle{HasRangedWeapons}
 
-\AtEndDocument{%
+\AtEndDocument{
+    \Weapon{%
+        Name=Unarmed,
+        Ability=\Stat{Brawl},
+        Accuracy=4,
+        Damage=7,
+        Defense=0,
+        Overwhelming=1,
+        Keywords={Bashing, Brawl, Grappling, Natural}
+    }
+
     \newwrite\WeaponList@Write
     \immediate\openout\WeaponList@Write=\jobname.weapons
 
@@ -391,49 +543,56 @@
 }
 
 \NewDocumentCommand{\PrintWeaponListHeader}{s}{%
-    \textbf{Name} &%
-    \IfBooleanT{#1}{\textbf{Range}} &%
-    \textbf{Acc} &%
-    \textbf{Dmg} &%
-    \textbf{Def} &%
-    \textbf{Ovw} &%
-    \textbf{Wth Pool} &%
-    \textbf{Wth Dmg} &%
-    \textbf{Dec Pool} &%
-    \textbf{Parry} &%
-    \textbf{Page} \\%
+    \bfseries\scshape Weapon &%
+    \IfBooleanT{#1}{\bfseries Range} &%
+    \bfseries Acc &%
+    \bfseries Dmg &%
+    \bfseries Def &%
+    \bfseries Ovw &%
+    \bfseries Wth Pool &%
+    \bfseries Wth Dmg &%
+    \bfseries Dec Pool &%
+    \bfseries Parry &%
+    \bfseries Page \\%
     \hline%
     \endhead%
 }
 
 \NewDocumentCommand{\PrintWeaponListMainRow}{s o m}{%
-    \setkeys{Weapon}{#3}%
-    \edef\Row{%
-        \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip+3pt}}%
-        \noexpand\textbf{\IfValueTF{#2}{\noexpand\nameref{#2}}{\Weapon@Name}} &%
-        \ifdef{\Weapon@Range}{\Weapon@Range}{} &
-        \Weapon@Accuracy &
-        \Weapon@Damage &
-        \ifdef{\Weapon@Defense}{\Weapon@Defense}{---} &
-        \Weapon@Overwhelming &
-        \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} &
-        +\Weapon@WitheringDamage{\Weapon@Damage} &
-        \Weapon@DecisivePool{\Weapon@Ability} &
-        \ifdef{\Weapon@Defense}{
-            \Weapon@ParryDV{\Weapon@Ability}{\Weapon@Defense}
-        }{%
-            ---%
-        } & %
-        \IfValueT{#2}{\noexpand\pageref{#2}}%
-    }%
-    \Row%
+    \begingroup%
+        \setkeys{Weapon}{#3}%
+        \xdef\Weapon@Row{%
+            \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip + 2pt}}%
+            \IfValueTF{#2}{\noexpand\itshape\noexpand\nameref{#2}}{\Weapon@Name} &%
+            \ifdef{\Weapon@Range}{\Weapon@Range}{} &
+            \Modifier{\Weapon@Accuracy} &
+            \Modifier{\Weapon@Damage} &
+            \ifdef{\Weapon@Defense}{\Modifier{\Weapon@Defense}}{---} &
+            \Weapon@Overwhelming &
+            \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} &
+            \Modifier{\Weapon@WitheringDamage{\Weapon@Damage}} &
+            \Weapon@DecisivePool{\Weapon@Ability} &
+            \ifdef{\Weapon@Defense}{
+                \Weapon@ParryDV{\Weapon@Ability}{\Weapon@Defense}
+            }{%
+                ---%
+            } & %
+            \IfValueTF{#2}{\noexpand\pageref{#2}}{---}%
+        }%
+    \endgroup%
+    \Weapon@Row%
 }
 
 \NewDocumentCommand{\PrintWeaponListContinuationRow}{m}{%
-    \\*%
-    \setkeys{Weapon}{#1}%
-    & \Weapon@Range& \Weapon@Accuracy& & & &%
-    \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} \\%
+    \begingroup%
+        \setkeys{Weapon}{#1}%
+        \xdef\Weapon@Row{%
+            \noexpand\\*%
+            & \Weapon@Range& \Weapon@Accuracy& & & &%
+            \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} \\%
+        }%
+    \endgroup%
+    \Weapon@Row%
 }
 
 \NewExpandableDocumentCommand{\PrintWeaponListKeywordsRow}{m}{%
@@ -449,38 +608,40 @@
 
 
 \NewDocumentCommand{\Weapon@WitheringPool}{m m}{%
-    \the\numexpr(\Attribute{Dexterity}) + (#1) + (#2)%
+    \the\numexpr(\Stat{Dexterity}) + (#1) + (#2)%
 }
 
 \NewDocumentCommand{\Weapon@WitheringDamage}{m}{%
-    \the\numexpr(\Attribute{Strength}) + (#1)%
+    \the\numexpr(\Stat{Strength}) + (#1)%
 }
 
 \NewDocumentCommand{\Weapon@DecisivePool}{m}{%
-    \the\numexpr(\Attribute{Dexterity}) + (#1)%
+    \the\numexpr(\Stat{Dexterity}) + (#1)%
 }
 
 \NewDocumentCommand{\Weapon@ParryDV}{m m}{%
-    \the\numexpr( (\Attribute{Dexterity}) + (#1) ) / 2 + (#2)%
+    \the\numexpr( (\Stat{Dexterity}) + (#1) ) / 2 + (#2)%
 }
 
 
 \NewDocumentCommand{\Weapon}{o m}{%
-    \setkeys{Weapon}{#2}%
-    \ifdef{\Weapon@Range}{%
-        \global\toggletrue{HasRangedWeapons}%
-    }{}%
-    \xappto\WeaponList{%
-        \noexpand\PrintWeaponListMainRow%
-                \ifdefempty{\WeaponList}{*}{}%
-                \IfValueT{#1}{[#1]}{%
-            #2%
-        }%
-        \ifdef{\Weapon@Keywords}{%
-            \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
+    \begingroup%
+        \setkeys{Weapon}{#2}%
+        \ifdef{\Weapon@Range}{%
+            \global\toggletrue{HasRangedWeapons}%
         }{}%
-        \noexpand\PrintWeaponListEndRow%
-    }%
+        \xappto\WeaponList{%
+            \noexpand\PrintWeaponListMainRow%
+                    \ifdefempty{\WeaponList}{*}{}%
+                    \IfValueT{#1}{[#1]}{%
+                #2%
+            }%
+            \ifdef{\Weapon@Keywords}{%
+                \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
+            }{}%
+            \noexpand\PrintWeaponListEndRow%
+        }%
+    \endgroup%
 }
 
 
@@ -493,77 +654,80 @@
 }
 
 \NewDocumentCommand{\RangedWeapon}{o m m}{%
-    \setkeys{Weapon}[Accuracy, Range]{#2}%
-    \setkeys{RangedWeapon}{#3}%
-    \xappto\WeaponList{%
-        \noexpand\PrintWeaponListMainRow%
-                \ifdefempty{\WeaponList}{*}{}%
-                \IfValueT{#1}{[#1]}{%
-            #2,%
-            Range=Close,%
-            Accuracy=\RangedWeapon@Close%
-        }%
-        \ifdef{\RangedWeapon@Short}{%
-            \noexpand\PrintWeaponListContinuationRow{#2,%
-                Range=Short,%
-                Accuracy=\RangedWeapon@Short%
+    \begingroup%
+        \setkeys{Weapon}[Accuracy, Range]{#2}%
+        \setkeys{RangedWeapon}{#3}%
+        \xappto\WeaponList{%
+            \noexpand\PrintWeaponListMainRow%
+                    \ifdefempty{\WeaponList}{*}{}%
+                    \IfValueT{#1}{[#1]}{%
+                #2,%
+                Range=Close,%
+                Accuracy=\RangedWeapon@Close%
             }%
-        }%
-        \ifdef{\RangedWeapon@Medium}{%
-            \noexpand\PrintWeaponListContinuationRow{#2,%
-                Range=Medium,%
-                Accuracy=\RangedWeapon@Medium%
+            \ifdef{\RangedWeapon@Short}{%
+                \noexpand\PrintWeaponListContinuationRow{%
+                    #2,%
+                    Range=Short,%
+                    Accuracy=\RangedWeapon@Short%
+                }%
             }%
-        }%
-        \ifdef{\RangedWeapon@Long}{%
-            \noexpand\PrintWeaponListContinuationRow{#2,%
-                Range=Long,%
-                Accuracy=\RangedWeapon@Long%
+            \ifdef{\RangedWeapon@Medium}{%
+                \noexpand\PrintWeaponListContinuationRow{%
+                    #2,%
+                    Range=Medium,%
+                    Accuracy=\RangedWeapon@Medium%
+                }%
             }%
-        }%
-        \ifdef{\RangedWeapon@Extreme}{%
-            \noexpand\PrintWeaponListContinuationRow{#2,%
-                Range=Extreme,%
-                Accuracy=\RangedWeapon@Extreme%
+            \ifdef{\RangedWeapon@Long}{%
+                \noexpand\PrintWeaponListContinuationRow{%
+                    #2,%
+                    Range=Long,%
+                    Accuracy=\RangedWeapon@Long%
+                }%
             }%
+            \ifdef{\RangedWeapon@Extreme}{%
+                \noexpand\PrintWeaponListContinuationRow{%
+                    #2,%
+                    Range=Extreme,%
+                    Accuracy=\RangedWeapon@Extreme%
+                }%
+            }%
+            \ifdef{\Weapon@Keywords}{%
+                \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
+            }{}%
+            \noexpand\PrintWeaponListEndRow%
         }%
-        \ifdef{\Weapon@Keywords}{%
-            \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
-        }{}%
-        \noexpand\PrintWeaponListEndRow%
+    \endgroup%
+}
+
+
+
+\NewDocumentCommand{\Stat}{m}{%
+    \ifcsdef{Stat@#1}{\csuse{Stat@#1}}{0}%
+}
+
+\NewDocumentCommand{\StatDots}{o m}{%
+    \Dots[#1]{\Stat{#2}}%
+}
+
+\NewDocumentCommand{\IfStatFavored}{m m m}{%
+    \providetoggle{Stat@#1@Favored}%
+    \iftoggle{Stat@#1@Favored}{#2}{#3}%
+}
+
+\NewDocumentCommand{\StatVal}{m}{%
+    \Val{#1}[\Stat{#1}]%
+}
+
+\NewDocumentCommand{\DefStat}{s m m}{%
+    \csgdef{Stat@#2}{#3}%
+    \IfBooleanT{#1}{%
+        \global\newtoggle{Stat@#2@Favored}%
+        \global\toggletrue{Stat@#2@Favored}%
     }%
 }
 
-
-\NewDocumentCommand{\EssenceDots}{o}{%
-    \Dots[#1]{\Essence}%
-}
-
-\NewDocumentCommand{\EssenceVal}{}{%
-    \Val{Essence}[\Essence]%
-}
-
-\NewDocumentCommand{\DefEssence}{m}{%
-    \gdef\Essence{#1}%
-}
-
-
-
-\NewDocumentCommand{\Attribute}{m}{%
-    \ifcsdef{Attribute@#1}{\csuse{Attribute@#1}}{0}%
-}
-
-\NewDocumentCommand{\AttributeDots}{o m}{%
-    \Dots[#1]{\Attribute{#2}}%
-}
-
-\NewDocumentCommand{\AttributeVal}{m}{%
-    \Val{#1}[\Attribute{#1}]%
-}
-
-\NewDocumentCommand{\DefAttribute}{m m}{%
-    \csgdef{Attribute@#1}{#2}%
-}
 
 \NewDocumentCommand{\PrintAttributeList}{}{%
     \begin{xltabular}{\linewidth}{%
@@ -591,38 +755,9 @@
 }
 
 \NewDocumentCommand{\PrintAttributeList@Row}{m}{%
-    #1 & \AttributeDots[5]{#1}%
+    #1 & \StatDots[5]{#1}%
 }
 
-
-
-\gdef\AbilityList{}
-
-\NewDocumentCommand{\Ability}{m}{%
-    \ifcsdef{Ability@#1}{\csuse{Ability@#1}}{0}%
-}
-
-\NewDocumentCommand{\AbilityDots}{o m}{%
-    \Dots[#1]{\Ability{#2}}%
-}
-
-\NewDocumentCommand{\IfAbilityFavored}{m m m}{%
-    \providetoggle{Ability@#1@Favored}%
-    \iftoggle{Ability@#1@Favored}{#2}{#3}%
-}
-
-\NewDocumentCommand{\AbilityVal}{m}{%
-    \Val{#1}[\Ability{#1}]%
-}
-
-\NewDocumentCommand{\DefAbility}{s m m}{%
-    \csgdef{Ability@#2}{#3}%
-    \IfBooleanT{#1}{%
-        \global\newtoggle{Ability@#2@Favored}%
-        \global\toggletrue{Ability@#2@Favored}%
-    }%
-    \listadd{\AbilityList}{#2}%
-}
 
 \NewDocumentCommand{\PrintAbilityList}{}{%
     \begin{xltabular}{\linewidth}{%
@@ -681,8 +816,124 @@
 }
 
 \NewDocumentCommand{\PrintAbilityList@Row}{m}{%
-    \IfAbilityFavored{#1}{\bfseries}{}#1 &%
-    \AbilityDots[5]{#1}%
+    \IfStatFavored{#1}{\bfseries}{}#1 &%
+    \StatDots[5]{#1}%
+}
+
+
+
+\AtEndDocument{
+    \newwrite\MiscStats@Write
+    \immediate\openout\MiscStats@Write=\jobname.stats
+
+    \write\MiscStats@Write{%
+        \noexpand\PrintMiscStatsWithMP{\Armor@TotalMobilityPenalty}%
+    }
+}
+
+\NewDocumentCommand{\PrintMiscStats}{}{%
+    \begin{xltabular}{\textwidth}{%
+        r @{\extracolsep{3pt}} l%
+        r @{\extracolsep{3pt}} l%
+    }%
+        \@input{\jobname.stats}%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintMiscStatsWithMP}{m}{%
+    \bfseries Join Battle: & \PrintMiscStats@JoinBattlePool{} (\Modifier[i]{3}) &%
+    \bfseries Evasion: & \PrintMiscStats@EvasionDVWithMP{#1} \\%
+    \bfseries Rush: & \PrintMiscStats@RushPoolWithMP{#1} &%
+    \bfseries Resolve: & \PrintMiscStats@ResolveDV \\%
+    \bfseries Disengage: & \PrintMiscStats@DisengagePoolWithMP{#1} &%
+    \bfseries Guile: & \PrintMiscStats@GuileDV \\%
+}
+
+\NewDocumentCommand{\PrintMiscStats@JoinBattlePool}{}{%
+    \the\numexpr(\Stat{Wits}) + (\Stat{Awareness})%
+}
+
+\NewDocumentCommand{\PrintMiscStats@EvasionDVWithMP}{m}{%
+    \the\numexpr( (\Stat{Dexterity}) + (\Stat{Dodge}) ) / 2 - (#1)\relax%
+}
+
+\NewDocumentCommand{\PrintMiscStats@RushPoolWithMP}{m}{%
+    \the\numexpr(\Stat{Dexterity}) + (\Stat{Athletics}) - (#1)\relax%
+}
+
+\NewDocumentCommand{\PrintMiscStats@DisengagePoolWithMP}{m}{%
+    \the\numexpr(\Stat{Dexterity}) + (\Stat{Dodge}) - (#1)\relax%
+}
+
+\NewDocumentCommand{\PrintMiscStats@ResolveDV}{}{%
+    \the\numexpr( (\Stat{Wits}) + (\Stat{Integrity}) ) / 2\relax%
+}
+
+\NewDocumentCommand{\PrintMiscStats@GuileDV}{}{%
+    \the\numexpr( (\Stat{Manipulation}) + (\Stat{Socialize}) ) / 2\relax%
+}
+
+
+
+\NewDocumentCommand{\PrintPools}{}{%
+    \begin{xltabular}{\textwidth}{%
+        lc @{\extracolsep{10pt}}%
+        >{\centering} p{1.5cm} @{\extracolsep{10pt}}%
+        >{\centering} p{1.5cm} @{\extracolsep{10pt}}%
+        X%
+    }
+        \bfseries\scshape Pools &%
+        \bfseries Full &%
+        \bfseries Commit &%
+        \bfseries Max &%
+        \bfseries Available \\%
+        \hline%
+        \endhead%
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \textbf{Personal Essence} & \PrintPools@PersonalEssencePool & & & \\%
+        \cline{3-3}\cline{4-4}\cline{5-5}%
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \textbf{Peripheral Essence} & \PrintPools@PeripheralEssencePool & & & \\%
+        \cline{3-3}\cline{4-4}\cline{5-5}%
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \textbf{Willpower} & \Stat{Willpower} & & & \\%
+        \cline{3-3}\cline{4-4}\cline{5-5}%
+    \end{xltabular}%
+}
+
+\NewDocumentCommand{\PrintPools@PersonalEssencePool}{}{%
+    \the\numexpr( 3 * (\Stat{Essence}) + 10 )\relax
+}
+
+\NewDocumentCommand{\PrintPools@PeripheralEssencePool}{}{%
+    \the\numexpr( 7 * (\Stat{Essence}) + 26 )\relax
+}
+
+
+\NewDocumentCommand{\IncHL}{}{%
+    \ifbool{mmode}{\text{I}}{I}%
+}
+
+\NewDocumentCommand{\DefHealthLevels}{m}{%
+    \gdef\HealthLevels{#1}%
+}
+
+\NewDocumentCommand{\PrintHealthLevels}{}{%
+    \begin{xltabular}{\linewidth}{>{\RaggedRight} X}%
+        \bfseries\scshape Health Levels \\%
+        \hline%
+        \endhead%
+        \DeclareDocumentCommand{\do}{m}{%
+            \parbox[b]{12pt}{%
+                \centering%
+                \vspace{3pt}%
+                \framebox{\rule{5pt}{0pt}\rule{0pt}{5pt}}\\[1pt]%
+                \( ##1 \)%
+            }%
+            \hspace{10pt}%
+        }%
+        \expandafter\docsvlist\expandafter{\HealthLevels}%
+    \end{xltabular}%
 }
 
 \makeatother

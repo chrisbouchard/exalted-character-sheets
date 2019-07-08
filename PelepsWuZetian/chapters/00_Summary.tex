@@ -1,20 +1,84 @@
 \onecolumn
 
-\begin{center}
-    {\FancyFont\Huge Peleps Wu Zetian}\\[7pt]
+\noindent%
+\begin{minipage}{\dimexpr0.5\linewidth - 10pt}%
+    {\FancyFont\Huge \thetitle}\\[7pt]
     {\scshape\bfseries\Large
-        Fire Aspect\\[5pt]
-        Essence~\EssenceDots
+        \Stat{Aspect} Aspect\\[5pt]
+        Essence~\StatDots{Essence}
     }
-\end{center}
+\end{minipage}%
+\hspace{\fill}%
+\begin{minipage}{\dimexpr0.5\linewidth - 10pt}%
+    \vspace{-\baselineskip}
+    \begin{xltabular}{\textwidth}{
+        r @{\extracolsep{3pt}} X
+        r @{\extracolsep{3pt}} X
+    }
+        \multicolumn{2}{l}{%
+            \bfseries\scshape Experience
+        } &
+        \multicolumn{2}{l}{%
+            \bfseries\scshape Dragon Experience
+        } \\
+        \hline
+        \endhead
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \bfseries Current: & &
+        \bfseries Current: & \\
+        \cline{2-2}\cline{4-4}
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \bfseries Total: & &
+        \bfseries Total: & \\
+        \cline{2-2}\cline{4-4}
+    \end{xltabular}
+\end{minipage}
+
 \vspace{\baselineskip}
+
+\begin{figure}[b!]
+    \noindent%
+    \begin{minipage}[t]{\dimexpr0.60\linewidth - 10pt}%
+        \PrintArmorList
+    \end{minipage}%
+    \hspace{\fill}%
+    \begin{minipage}[t]{\dimexpr0.40\linewidth - 10pt}%
+        \begin{xltabular}{\textwidth}{X}
+            \bfseries\scshape Specialties \\
+            \hline%
+            \endhead%
+            Athletics (Foot-Race) \\
+            Bureaucracy (Gubernatorial) \\
+            Dodge (Dueling) \\
+            Melee (Daiklave) \\
+            Presence (Instill Emotion) \\
+        \end{xltabular}
+    \end{minipage}
+
+    \vspace{0.5\baselineskip}
+
+    \PrintPools
+
+    \vspace{-\baselineskip}
+
+    \begin{minipage}[t]{\dimexpr0.60\linewidth - 10pt}%
+        \PrintHealthLevels%
+    \end{minipage}%
+    \hspace{\fill}%
+    \begin{minipage}[t]{\dimexpr0.40\linewidth - 10pt}%
+        \PrintMiscStats
+    \end{minipage}
+\end{figure}
 
 
 \PrintAttributeList
+
+\vspace{0pt plus 12pt minus 12pt}
+
 \PrintAbilityList
 
+\vspace{0pt plus 12pt minus 12pt}
 
-\mysubsection{weapon-summary}{Weapons}
 \PrintWeaponList
 
 

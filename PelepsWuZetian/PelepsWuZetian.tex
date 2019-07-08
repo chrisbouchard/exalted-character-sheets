@@ -13,28 +13,32 @@
 \date{\ddmmmyyyydate\today}
 \titleimage{Peleps.png}
 
-\DefEssence{2}
+\DefStat{Aspect}{Fire}
+\DefStat{Essence}{2}
+\DefStat{Willpower}{5}
 
-\DefAttribute{Strength}{4}
-\DefAttribute{Dexterity}{5}
-\DefAttribute{Stamina}{2}
-\DefAttribute{Charisma}{4}
-\DefAttribute{Manipulation}{2}
-\DefAttribute{Appearance}{3}
-\DefAttribute{Perception}{3}
-\DefAttribute{Intelligence}{2}
-\DefAttribute{Wits}{2}
+\DefStat{Strength}{4}
+\DefStat{Dexterity}{5}
+\DefStat{Stamina}{2}
+\DefStat{Charisma}{4}
+\DefStat{Manipulation}{2}
+\DefStat{Appearance}{3}
+\DefStat{Perception}{3}
+\DefStat{Intelligence}{2}
+\DefStat{Wits}{2}
 
-\DefAbility*{Athletics}{3}
-\DefAbility*{Bureaucracy}{4}
-\DefAbility*{Dodge}{5}
-\DefAbility*{Integrity}{5}
-\DefAbility*{Investigation}{4}
-\DefAbility*{Melee}{5}
-\DefAbility*{Presence}{4}
-\DefAbility*{Ride}{3}
-\DefAbility*{Sail}{3}
-\DefAbility*{Socialize}{3}
+\DefStat*{Athletics}{3}
+\DefStat*{Bureaucracy}{4}
+\DefStat*{Dodge}{5}
+\DefStat*{Integrity}{5}
+\DefStat*{Investigation}{4}
+\DefStat*{Melee}{5}
+\DefStat*{Presence}{4}
+\DefStat*{Ride}{3}
+\DefStat*{Sail}{3}
+\DefStat*{Socialize}{3}
+
+\DefHealthLevels{0, -1, -1, -2, -2, -4, \IncHL}
 
 \begin{document}
 
@@ -48,10 +52,11 @@
 
 \cleardoublepage
 
+\input{chapters/00_Summary.tex}
+
 \mainmatter
 \pagestyle{main}
 
-\input{chapters/00_Summary.tex}
 \input{chapters/01_Background.tex}
 \input{chapters/02_Merits.tex}
 \input{chapters/03_Charms.tex}
