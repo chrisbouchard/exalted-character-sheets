@@ -124,8 +124,58 @@
     \endgroup%
 }
 
-\NewDocumentCommand{\Val}{m}{%
-    \ifbool{mmode}{\text{#1}}{#1}%
+\NewDocumentCommand{\Val}{s m}{%
+    \IfBooleanT{#1}{[}\ifbool{mmode}{\text{#2}}{#2}\IfBooleanT{#1}{]}%
+}
+
+\newcounter{@OptionListLen}%
+\NewDocumentCommand{\Options}{s m}{%
+    \begingroup%
+        \DeclareDocumentCommand{\do}{m}{%
+            \defcounter{@OptionListLen}{\value{@OptionListLen} + 1}%
+        }%
+        \docsvlist{#2}%
+        \def\@Options{}%
+        \ifnumless{\value{@OptionListLen}}{3}{%
+            \DeclareDocumentCommand{\do}{m}{%
+                \ifdefempty\@Options{%
+                    \eappto\@Options{##1}%
+                }{%
+                    \eappto\@Options{\noexpand\Options@Or*##1}%
+                }%
+            }%
+        }{%
+            \DeclareDocumentCommand{\do}{m}{%
+                \ifdefempty\@Options{%
+                    \eappto\@Options{##1}%
+                }{%
+                    \ifnumequal{\value{@OptionListLen}}{1}{%
+                        \eappto\@Options{\noexpand\Options@Comma\noexpand\Options@Or##1}%
+                    }{%
+                        \eappto\@Options{\noexpand\Options@Comma##1}%
+                    }%
+                }%
+                \defcounter{@OptionListLen}{\value{@OptionListLen} - 1}%
+            }%
+        }%
+        \docsvlist{#2}%
+        \ifbool{mmode}{%
+            \DeclareDocumentCommand{\Options@Comma}{}{%
+                ,\allowbreak%
+            }%
+            \DeclareDocumentCommand{\Options@Or}{s}{%
+                \allowbreak\text{\IfBooleanT{##1}{ }or }\allowbreak%
+            }%
+        }{%
+            \DeclareDocumentCommand{\Options@Comma}{}{%
+                , %
+            }%
+            \DeclareDocumentCommand{\Options@Or}{s}{%
+                \IfBooleanT{##1}{ }or %
+            }%
+        }%
+        \IfBooleanT{#1}{[\hspace{1pt}}\@Options\IfBooleanT{#1}{\hspace{1pt}]}%
+    \endgroup%
 }
 
 \NewDocumentCommand{\Pool}{s o m o}{%
@@ -203,7 +253,7 @@
     Attunement,
     Type,
     Tags,
-    HearthstoneSlots,
+    HearthstoneSockets,
     Reference
 }
 
@@ -215,8 +265,8 @@
         \ifdef{\Artifact@Tags}{%
             \item[Tags:] \Artifact@Tags%
         }{}%
-        \ifdef{\Artifact@HearthstoneSlots}{%
-            \item[Hearthstone Slot(s):] \Artifact@HearthstoneSlots%
+        \ifdef{\Artifact@HearthstoneSockets}{%
+            \item[Hearthstone Socket(s):] \Artifact@HearthstoneSockets%
         }{}%
         \ifdef{\Artifact@Reference}{%
             \item[Reference:] \Artifact@Reference%
@@ -231,14 +281,16 @@
     Reference
 }
 
-\NewDocumentEnvironment{Hearthstone}{m m +b}{%
+\NewDocumentEnvironment{Hearthstone}{m m m +b}{%
     \setkeys{Hearthstone}{#2}%
     \protected@edef\Hearthstone@Name{#1}%
-    \protected@edef\Hearthstone@Title{{%
+    \protected@edef\Hearthstone@Title{%
         \Hearthstone@Name{} (\Hearthstone@Type{})%
-    }}%
-    \def\Hearthstone@Body{#3}%
-    \expandafter\subsection\Hearthstone@Title%
+    }%
+    \protected@edef\Hearthstone@Label{hearthstone:#3}%
+    \def\Hearthstone@Body{#4}%
+    \expandafter\subsection\expandafter{\Hearthstone@Title}%
+    \expandafter\label\expandafter{\Hearthstone@Label}%
     \ifboolexpr{%
         test {\ifdef{\Hearthstone@Keywords}} or%
         test {\ifdef{\Hearthstone@Reference}}%
@@ -300,6 +352,11 @@
 \NewDocumentCommand{\CharmSection}{m m}{%
     \mysection{#1}{#2}%
     \CharmGroup{section:#1}%
+}
+
+\NewDocumentCommand{\CharmSubSection}{m m}{%
+    \mysubsection{#1}{#2}%
+    \CharmGroup{subsection:#1}%
 }
 
 \NewDocumentCommand{\CharmGroup}{m}{%
@@ -435,7 +492,7 @@
         \setkeys{Armor}{#3}%
         \xdef\Armor@Row{%
             \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip + 2pt}}%
-            \IfValueTF{#2}{\noexpand\itshape\noexpand\nameref{#2}}{\Armor@Name} &%
+            \IfValueTF{#2}{\noexpand\nameref{#2}}{\Armor@Name} &%
             \Armor@Soak &%
             \ifdef{\Armor@Hardness}{\Armor@Hardness}{0} &%
             \ifdef{\Armor@MobilityPenalty}{\Modifier-{\Armor@MobilityPenalty}}{\Modifier-{0}} &%
@@ -563,7 +620,7 @@
         \setkeys{Weapon}{#3}%
         \xdef\Weapon@Row{%
             \IfBooleanF{#1}{\noexpand\rule{0pt}{\dimexpr\normalbaselineskip + 2pt}}%
-            \IfValueTF{#2}{\noexpand\itshape\noexpand\nameref{#2}}{\Weapon@Name} &%
+            \IfValueTF{#2}{\noexpand\nameref{#2}}{\Weapon@Name} &%
             \ifdef{\Weapon@Range}{\Weapon@Range}{} &
             \Modifier{\Weapon@Accuracy} &
             \Modifier{\Weapon@Damage} &
@@ -588,8 +645,8 @@
         \setkeys{Weapon}{#1}%
         \xdef\Weapon@Row{%
             \noexpand\\*%
-            & \Weapon@Range& \Weapon@Accuracy& & & &%
-            \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy} \\%
+            & \Weapon@Range & \Modifier{\Weapon@Accuracy} & & & &%
+            \Weapon@WitheringPool{\Weapon@Ability}{\Weapon@Accuracy}%
         }%
     \endgroup%
     \Weapon@Row%
@@ -671,28 +728,28 @@
                     Range=Short,%
                     Accuracy=\RangedWeapon@Short%
                 }%
-            }%
+            }{}%
             \ifdef{\RangedWeapon@Medium}{%
                 \noexpand\PrintWeaponListContinuationRow{%
                     #2,%
                     Range=Medium,%
                     Accuracy=\RangedWeapon@Medium%
                 }%
-            }%
+            }{}%
             \ifdef{\RangedWeapon@Long}{%
                 \noexpand\PrintWeaponListContinuationRow{%
                     #2,%
                     Range=Long,%
                     Accuracy=\RangedWeapon@Long%
                 }%
-            }%
+            }{}%
             \ifdef{\RangedWeapon@Extreme}{%
                 \noexpand\PrintWeaponListContinuationRow{%
                     #2,%
                     Range=Extreme,%
                     Accuracy=\RangedWeapon@Extreme%
                 }%
-            }%
+            }{}%
             \ifdef{\Weapon@Keywords}{%
                 \noexpand\PrintWeaponListKeywordsRow{\expandonce{\Weapon@Keywords}}%
             }{}%
@@ -717,7 +774,7 @@
 }
 
 \NewDocumentCommand{\StatVal}{m}{%
-    \Val{#1}[\Stat{#1}]%
+    \Val{#1}\hspace{1pt}[\Stat{#1}]%
 }
 
 \NewDocumentCommand{\DefStat}{s m m}{%
@@ -902,11 +959,11 @@
 }
 
 \NewDocumentCommand{\PrintPools@PersonalEssencePool}{}{%
-    \the\numexpr( 3 * (\Stat{Essence}) + 10 )\relax
+    \the\numexpr11 + (\Stat{Essence})\relax
 }
 
 \NewDocumentCommand{\PrintPools@PeripheralEssencePool}{}{%
-    \the\numexpr( 7 * (\Stat{Essence}) + 26 )\relax
+    \the\numexpr23 + 4 * (\Stat{Essence})\relax
 }
 
 

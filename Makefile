@@ -1,10 +1,14 @@
-.PHONY : all clean PelepsWuZetian
+.PHONY : all clean PelepsWuZetian TepetHu
 
-all : PelepsWuZetian
+all : PelepsWuZetian TepetHu
 
 PelepsWuZetian :
 	make -C PelepsWuZetian
 
+TepetHu :
+	make -C TepetHu
+
 clean :
 	make -C PelepsWuZetian clean
+	make -C TepetHu clean
 

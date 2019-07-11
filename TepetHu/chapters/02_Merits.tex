@@ -1,0 +1,229 @@
+﻿\mychapter{artifacts}{Artifacts and Other Merits}
+
+
+\begin{Merit}{Amulet of -Someone-}{%
+    Type=Artifact,
+    Rating=2,
+    Reference=\cite*[p.~159]{ex3}
+}{hearthstone-amulet}
+    An orichalcum hearthstone amulet found in \nameref{merit:cirrus-sanctum}.
+    The body of the amulet is eye-shaped, carved with intricate Old Realm
+    caligraphy. The socket contains several rings attached to the body. When a
+    hearthstone is placed near the amulet, the rings spin to create an opening,
+    and then spin back to secure the hearthstone within the frame.
+
+    This amulet was specifically designed to hold
+    \nameref{hearthstone:eye-of-someone}. The amulet, the manse, and the
+    hearthstone were all designed in the First Age by a Twilight
+    sorcerer-engineer. Whether he was -Someone- or if the name came later is
+    unknown. While the amulet is capable of socketing any hearthstone, The Eye
+    fits perfectly in its rings.
+
+    \Artifact{%
+        Attunement=1m,
+        Type={Hearthstone Amulet},
+        HearthstoneSockets=1,
+        Reference=\cite*[p~601]{ex3}
+    }
+\end{Merit}
+
+
+\begin{Merit}{Chain Lightning}{%
+    Description=Blue Jade Infinite Chakram,
+    Type=Artifact,
+    Rating=3,
+    Reference=\cite*[p.~159]{ex3}
+}{chain-lightning}
+    A circular blade of blue jade inlaid with starmetal filigree. Even when
+    held, Chain Lightning tingles with power. When thrown, the blade crackles
+    to life with a shower of sparks. Bolts of electrical essence arc to any
+    metal objects near enough its path. With each collision and ricochet, Chain
+    Lightning emits a sharp crack and burst of electricity.
+
+    \Artifact{%
+        Attunement=5m,
+        Type={Light (+10 Damage, 3 Overwhelming)},
+        Tags={Lethal, Thrown (Medium), Cutting, Special},
+        Reference=\cite*[p~597]{ex3}
+    }
+    \RangedWeapon[merit:chain-lightning]{%
+        Ability=\Stat{Thrown} + 1,
+        Damage=10,
+        Overwhelming=5,
+        Keywords={Lethal, Thrown (Medium), Cutting, Special},
+    }{%
+        Close=5,
+        Short=4,
+        Medium=3,
+        Long=0,
+        Extreme=-2
+    }
+
+    \CharmSubSection{chain-lightning-evocations}{Evocations of Chain Lightning}
+
+    Once the Exalt has attuned to Chain Lightning, \tldr{when he is in Air Aura,
+    Chain Lightning provides \Modifier{+1} to Accuracy. In strongly
+    air-aspected environments, such as high winds or thunderstorms, it adds
+    \Pool{\StatVal{Essence}} to Accuracy instead.}
+
+    \begin{Charm}{Shocking Strike}{%
+        Cost=2m,
+        Duration=Instant,
+        Keywords={Air, Dual},
+        Mins={Athletics 1, Essence 1},
+        Type=\SupplementalType
+    }{shocking-strike}
+        Armor may deflect the blade, but it also serves as a channel for
+        electrical essence. \tldr{An attack made with Chain Lightning ignores
+        \Pool{\StatVal{Essence}} soak or hardness from metal armor, including
+        the five magical metals.}
+    \end{Charm}
+\end{Merit}
+
+
+\begin{Merit}{The Cirrus Sanctum}{%
+    Description=Greater Manse,
+    Type=Manse,
+    Rating=5,
+    Reference=\cite*[p.~163]{ex3}
+}{cirrus-sanctum}
+    On top of a permanent storm cloud, wandering \emph{somewhere} in the seas
+    to the Southwest of the Blessed Isle, sits a beautiful tower fortress: The
+    Cirrus Sanctum. The tower is not visible from sea level; one must fly up
+    to the cloud level to see its white stone gleaming in the sun.
+
+    \begin{figure}[h]
+        \includegraphics[width=\linewidth]{CirrusSanctum.jpg}
+        \caption{Basic idea, but missing the cloud}
+    \end{figure}
+
+    The Sanctum was built in the First Age by a Twilight sorcerer-engineer.
+    Since the Usurpation the Sanctum has had several masters, eventually
+    passing into the ownership of House Tepet. Tepet Hu has been granted use of
+    the manse by his House to further his arcane research.
+
+    The tower consists of several floors. The "ground" floor --- level with the
+    top of the cloud --- is an a entrance hall. The next floor up is a main
+    living area. It has a relatively modest dining room and sitting room. Up
+    from there are bedrooms. Up still is the library. And finally, the top
+    floor is the hearthstone room, which also serves as a sorcerous workshop,
+    including an orichalcum binding circle inlaid into the floor. There is also
+    a basement with a kitchen and servant quarters.
+
+    Together the Sanctum and its cloud drift along the leylines of the
+    Sourthwestern seas, slowly drawn by the currents of essence in the air.
+    Predicting the location of the manse is something like predicting the
+    weather. It's easy enough to know where it will be tomorrow, but much
+    harder a month from now. It is a \Pool{\StatVal{Intelligence} +
+    \StatVal{Occult}} roll to predict its movements, starting at difficulty 2
+    but increasing by 1 for each month, to a max of 5. Being attuned to the
+    Sanctum caps the difficulty at 3; the Exalt gains an intuitive
+    understanding of the manse's movements, but still must understand the
+    currents of essence.
+
+
+    \begin{Hearthstone}{The Eye of -Someone-}{%
+        Type=Greater Air Hearthstone,
+        Keywords=Linked
+    }{eye-of-someone}
+        This hearthstone is an azure blue orb, perfectly spherical. Its depths
+        are a dark black cloud. The Eye of -Someone- holds a pool of up to 10
+        sorcerous motes. As long as it is socketed into an attuned artifact,
+        it allows the bearer to draw up to \Pool{\StatVal{Essence}} sorcerous
+        motes from its pool per spell. Until the spell is cast or lost, the
+        stone glows brightly.
+
+        The Eye of -Someone- recharges one sorcerous mote per day, at twilight,
+        or two within its home manse. The size of the dark cloud in the center
+        of the Eye varies inversely with its charge.
+
+        Once per story, the wearer may draw 10 sorcerous motes from The Eye of
+        -Someone-, regardless of it current pool. Once the spell is either cast
+        or lost, The Eye's sorcerous mote pool empties and the stone turns jet
+        black. It will not recharge sorcerous motes unless left to charge in
+        its home manse for one month, coming to life fully charged at twilight
+        on the 30th day.
+    \end{Hearthstone}
+\end{Merit}
+
+
+\DocumentColumnBreak
+\begin{Merit}{Language: Dragontongue}{%
+    Type=Language,
+    Rating=1,
+    Reference=\cite*[p.~162]{ex3}
+}{language-dragontongue}
+    Derived from recovered elements of a priestly language that was lost during
+    the shogunate, luminaries of House Mnemon birthed and spread this language
+    over the course of two centuries. It is a mix of Old Realm and High Realm,
+    with elements of its lost shogunate tongue, and excludes the mind from the
+    wider, more dangerous concepts inherent to Old Realm, keeping a person in
+    mind of the Dragons, the Poles, the natural world and the Perfected
+    Hierarchy. It is a beautiful language more than a scholarly one, and even
+    in satrapies which have been thoroughly suppressed by the Realm, there is a
+    rush by savants and poets to learn this language of poets and princes. Its
+    written form utilizes very challenging yet beautiful brushstrokes.
+\end{Merit}
+
+
+\begin{Merit}{Language: Old Realm}{%
+    Type=Language,
+    Rating=1,
+    Reference=\cite*[p.~162]{ex3}
+}{language-old-realm}
+    The native language of the spirits and those that created them, as well as
+    of the Fair Folk. It was widely spoken in the First Age, especially by the
+    savants and sorcerer-engineers, and used for many official documents.
+    Characters must have Lore 1+ or Occult 1+ to learn this language. There
+    exist several styles for writing Old Realm, the most extravagant of which
+    is a complex glyphic system where symbol arrangement is as important as
+    symbol choice, and the same phrase might be read in several ways, often as
+    a deliberate choice by the writer intended to impart subtle and layered
+    meaning.
+\end{Merit}
+
+
+\begin{Merit}{House Stipend}{%
+    Type=Resources,
+    Rating=3,
+    Reference=\cite*[p.~164]{ex3}
+}{house-stipend}
+    \TBW
+
+    \mysubsection{breastplate}{Feathersteel Breastplate}
+
+    One item purchased with his resources is a breastplate made of
+    feathersteel, a rare, light metal mined in the ice-covered mountains of
+    the far North. All armor made of feathersteel is somewhat ligther than
+    normal and never rusts.
+
+    \Armor[subsection:breastplate]{%
+        Soak=3,
+        Keywords=Silent
+    }
+\end{Merit}
+
+
+\DocumentColumnBreak
+\begin{Merit}{Influence (House Tepet)}{%
+    Type=Influence,
+    Rating=2,
+    Reference=\cite*[p.~162]{ex3}
+}{influence}
+    \TBW
+\end{Merit}
+
+
+\begin{Merit}{Professorship at the Heptagram}{%
+    Type=Backing,
+    Rating=3,
+    Reference=\cite*[p.~159]{ex3}
+}{professorship}
+    \TBW
+\end{Merit}
+
+
+\printbibliography[title=References]
+
+% vim: filetype=tex: textwidth=79:
+

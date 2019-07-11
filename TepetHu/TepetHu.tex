@@ -1,0 +1,73 @@
+﻿\documentclass[10pt,twocolumn,twoside]{book}
+\raggedbottom
+
+\input{packages.tex}
+\input{setup.tex}
+
+% Set the bibliography source
+\addbibresource{../ExaltedBooks.bib}
+
+\title{Tepet Hu}
+\subtitle{Sorcerer Scholar}
+\author{Chris Bouchard}
+\date{\ddmmmyyyydate\today}
+\titleimage{Tepet.png}
+
+\DefStat{Aspect}{Air}
+\DefStat{Essence}{2}
+\DefStat{Willpower}{6}
+
+\DefStat{Strength}{2}
+\DefStat{Dexterity}{3}
+\DefStat{Stamina}{2}
+\DefStat{Charisma}{3}
+\DefStat{Manipulation}{4}
+\DefStat{Appearance}{2}
+\DefStat{Perception}{3}
+\DefStat{Intelligence}{4}
+\DefStat{Wits}{4}
+
+\DefStat*{Awareness}{4}
+\DefStat*{Craft}{3}
+\DefStat*{Dodge}{4}
+\DefStat*{Integrity}{3}
+\DefStat {Investigation}{2}
+\DefStat*{Linguistics}{4}
+\DefStat*{Lore}{5}
+\DefStat {Melee}{1}
+\DefStat*{Occult}{5}
+\DefStat*{Presence}{3}
+\DefStat {Resistance}{1}
+\DefStat {Sail}{2}
+\DefStat {Socialize}{1}
+\DefStat*{Stealth}{0}
+\DefStat {Survival}{1}
+\DefStat*{Thrown}{4}
+
+\DefHealthLevels{0, -1, -1, -2, -2, -4, \IncHL}
+
+\begin{document}
+
+\frontmatter
+\pagenumbering{gobble}
+\pagestyle{empty}
+
+\begin{titlepage}
+    \MakeExaltedTitle
+\end{titlepage}
+
+\cleardoublepage
+
+\input{chapters/00_Summary.tex}
+
+\mainmatter
+\pagestyle{main}
+
+\input{chapters/01_Background.tex}
+\input{chapters/02_Merits.tex}
+\input{chapters/03_Charms.tex}
+
+\end{document}
+
+% vim: filetype=tex: textwidth=79:
+

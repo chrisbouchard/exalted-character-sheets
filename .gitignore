@@ -10,6 +10,7 @@
 *.ptc
 *.pdf
 *.run.xml
+*.stats
 *.weapons
 *.xdv
 

@@ -1,4 +1,4 @@
-BASENAME := PelepsWuZetian
+BASENAME := TepetHu
 
 BIBFILE := ../ExaltedBooks.bib
 
@@ -18,7 +18,7 @@ $(BASENAME).pdf : $(BASENAME).tex \
     chapters/01_Background.tex \
     chapters/02_Merits.tex \
     chapters/03_Charms.tex \
-    Peleps.png \
+    Tepet.png \
     $(BIBFILE) $(TEXDEPS)
 	latexmk -pdfxe -dvi- -ps- $<
 
