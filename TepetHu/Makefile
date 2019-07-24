@@ -18,6 +18,7 @@ $(BASENAME).pdf : $(BASENAME).tex \
     chapters/01_Background.tex \
     chapters/02_Merits.tex \
     chapters/03_Charms.tex \
+    chapters/04_Spells.tex \
     Tepet.png \
     $(BIBFILE) $(TEXDEPS)
 	latexmk -pdfxe -dvi- -ps- $<

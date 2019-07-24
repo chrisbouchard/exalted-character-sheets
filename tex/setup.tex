@@ -6,9 +6,6 @@
 % Set the page size.
 \geometry{paper=letterpaper, margin=1in}
 
-% Set up our preferred fonts.
-\setmainfont[Ligatures={Common,TeX}]{Libertinus Serif}
-\setmathfont{Libertinus Math}
 \newfontfamily\FancyFont{Envision}
 
 % Store a subtitle
@@ -29,7 +26,7 @@
     {\filcenter\normalfont\large\scshape}{\chaptertitlename\ \Numberstring{chapter}}{5pt}{\FancyFont\huge}
 \titleformat{\section}{\FancyFont\large}{}{0pt}{}
 \titleformat{\subsection}{\normalfont\large\bfseries\scshape}{}{0pt}{}
-\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{}{0pt}{}[:]
+\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{}{0pt}{}
 \titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
 
 % Reduce spacing around titles.
@@ -201,12 +198,6 @@
 }
 
 \newcommand{\TBW}{\textit{To be written\ldots}}
-
-
-\newcommand{\PermanentType}{Permanent}
-\newcommand{\ReflexiveType}{Reflexive}
-\newcommand{\SimpleType}{Simple}
-\newcommand{\SupplementalType}{Supplemental}
 
 
 \NewDocumentEnvironment{Unavailable}{+b}{%
@@ -424,6 +415,50 @@
     }%
 }{}
 
+\NewDocumentEnvironment{Spell}{m m m +b}{%
+    \setkeys{Charm}{Cost=\NoCost, #2}%
+    \protected@edef\Charm@Name{#1}%
+    \protected@edef\Charm@Title{{%
+        \Charm@Name%
+        \ifbool{Charm@Unpurchased}{ (Unpurchased)}{}%
+    }}%
+    \protected@edef\Charm@Label{charm:#3}%
+    \def\Charm@Description{#4}%
+    \def\Charm@Body{%
+        \expandafter\subsection\Charm@Title%
+        \expandafter\label\expandafter{\Charm@Label}%
+        \vspace*{0.25\parskip}%
+        \begin{description}[noitemsep]%
+            \item[Cost:] \Charm@Cost%
+            \ifdef{\Charm@Keywords}{%
+                \item[Keywords:] \Charm@Keywords%
+            }{}%
+            \item[Duration:] \Charm@Duration%
+            \ifdef{\Charm@Prerequisites}{%
+                \item[Prerequisite Charms:] \Charm@Prerequisites%
+            }{}%
+            \ifdef{\Charm@Reference}{%
+                \item[Reference:] \Charm@Reference%
+            }{}%
+        \end{description}%
+        \Charm@Description%
+    }%
+    \ifbool{Charm@Unpurchased}{%
+        \begin{Unavailable}%
+            \Charm@Body%
+        \end{Unavailable}%
+    }{%
+        \Charm@Body%
+        \xappto\CharmList%
+            {\noexpand\PrintCharmListRow%
+                {\Charm@Label}%
+                {\expandonce{\Charm@Cost}}%
+                {}%
+                {\expandonce{\Charm@Duration}}%
+        }%
+    }%
+}{}
+
 
 \newcommand{\MakeExaltedTitle}{%
     \pdfbookmark{\thetitle: \thesubtitle}{Title Page}
@@ -606,9 +641,9 @@
     \bfseries Dmg &%
     \bfseries Def &%
     \bfseries Ovw &%
-    \bfseries Wth Pool &%
-    \bfseries Wth Dmg &%
-    \bfseries Dec Pool &%
+    \bfseries W. Atk &%
+    \bfseries W. Dmg &%
+    \bfseries D. Atk &%
     \bfseries Parry &%
     \bfseries Page \\%
     \hline%
@@ -932,7 +967,21 @@
 
 
 
-\NewDocumentCommand{\PrintPools}{}{%
+\NewDocumentEnvironment{PrintPools}{b}{%
+    \NewDocumentCommand{\PrintPersonalEssencePool}{}{%
+        \PrintPool{Personal Essence}{\PrintPools@PersonalEssencePool}%
+    }
+    \NewDocumentCommand{\PrintPeripheralEssencePool}{}{%
+        \PrintPool{Peripheral Essence}{\PrintPools@PeripheralEssencePool}%
+    }
+    \NewDocumentCommand{\PrintWillpowerPool}{}{%
+        \PrintPool{Willpower}{\Stat{Willpower}}%
+    }
+    \NewDocumentCommand{\PrintPool}{m m}{%
+        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
+        \bfseries ##1 & ##2 & & & \\%
+        \cline{3-3}\cline{4-4}\cline{5-5}%
+    }
     \begin{xltabular}{\textwidth}{%
         lc @{\extracolsep{10pt}}%
         >{\centering} p{1.5cm} @{\extracolsep{10pt}}%
@@ -946,15 +995,7 @@
         \bfseries Available \\%
         \hline%
         \endhead%
-        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
-        \textbf{Personal Essence} & \PrintPools@PersonalEssencePool & & & \\%
-        \cline{3-3}\cline{4-4}\cline{5-5}%
-        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
-        \textbf{Peripheral Essence} & \PrintPools@PeripheralEssencePool & & & \\%
-        \cline{3-3}\cline{4-4}\cline{5-5}%
-        \rule{0pt}{\dimexpr\normalbaselineskip+3pt}%
-        \textbf{Willpower} & \Stat{Willpower} & & & \\%
-        \cline{3-3}\cline{4-4}\cline{5-5}%
+        #1%
     \end{xltabular}%
 }
 
@@ -994,6 +1035,4 @@
 }
 
 \makeatother
-
-% vim: filetype=tex: textwidth=79:
 

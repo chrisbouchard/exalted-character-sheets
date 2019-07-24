@@ -1,11 +1,11 @@
-﻿\mychapter{artifacts}{Artifacts and Other Merits}
+﻿\mychapter{merits}{Merits}
 
 
-\begin{Merit}{Amulet of -Someone-}{%
+\begin{Merit}{The Amulet of Delepitorae}{%
     Type=Artifact,
     Rating=2,
     Reference=\cite*[p.~159]{ex3}
-}{hearthstone-amulet}
+}{amulet-of-delepitorae}
     An orichalcum hearthstone amulet found in \nameref{merit:cirrus-sanctum}.
     The body of the amulet is eye-shaped, carved with intricate Old Realm
     caligraphy. The socket contains several rings attached to the body. When a
@@ -13,11 +13,11 @@
     and then spin back to secure the hearthstone within the frame.
 
     This amulet was specifically designed to hold
-    \nameref{hearthstone:eye-of-someone}. The amulet, the manse, and the
+    \nameref{hearthstone:eye-of-delepitorae}. The amulet, the manse, and the
     hearthstone were all designed in the First Age by a Twilight
-    sorcerer-engineer. Whether he was -Someone- or if the name came later is
-    unknown. While the amulet is capable of socketing any hearthstone, The Eye
-    fits perfectly in its rings.
+    sorcerer-engineer. Whether he or she was Delepitorae or if the name came
+    later is unknown. While the amulet is capable of socketing any hearthstone,
+    The Eye fits perfectly in its rings.
 
     \Artifact{%
         Attunement=1m,
@@ -69,11 +69,11 @@
     \begin{Charm}{Shocking Strike}{%
         Cost=2m,
         Duration=Instant,
-        Keywords={Air, Dual},
+        Keywords={Air, Uniform},
         Mins={Athletics 1, Essence 1},
-        Type=\SupplementalType
+        Type=Supplemental
     }{shocking-strike}
-        Armor may deflect the blade, but it also serves as a channel for
+        Armor may deflect a blade, but it also serves as a channel for
         electrical essence. \tldr{An attack made with Chain Lightning ignores
         \Pool{\StatVal{Essence}} soak or hardness from metal armor, including
         the five magical metals.}
@@ -94,13 +94,14 @@
 
     \begin{figure}[h]
         \includegraphics[width=\linewidth]{CirrusSanctum.jpg}
-        \caption{Basic idea, but missing the cloud}
+        \caption*{Basic idea, but missing the cloud}
     \end{figure}
 
     The Sanctum was built in the First Age by a Twilight sorcerer-engineer.
-    Since the Usurpation the Sanctum has had several masters, eventually
-    passing into the ownership of House Tepet. Tepet Hu has been granted use of
-    the manse by his House to further his arcane research.
+    That history has been lost to time for the most part. Since the Usurpation,
+    the Sanctum has had several masters, eventually passing into the ownership
+    of House Tepet. Tepet Hu has been granted use of the manse by his House to
+    further his arcane research.
 
     The tower consists of several floors. The "ground" floor --- level with the
     top of the cloud --- is an a entrance hall. The next floor up is a main
@@ -114,7 +115,7 @@
     Sourthwestern seas, slowly drawn by the currents of essence in the air.
     Predicting the location of the manse is something like predicting the
     weather. It's easy enough to know where it will be tomorrow, but much
-    harder a month from now. It is a \Pool{\StatVal{Intelligence} +
+    harder a month from now. It is an \Pool{\StatVal{Intelligence} +
     \StatVal{Occult}} roll to predict its movements, starting at difficulty 2
     but increasing by 1 for each month, to a max of 5. Being attuned to the
     Sanctum caps the difficulty at 3; the Exalt gains an intuitive
@@ -122,23 +123,28 @@
     currents of essence.
 
 
-    \begin{Hearthstone}{The Eye of -Someone-}{%
+    \begin{Hearthstone}{The Eye of Delepitorae}{%
         Type=Greater Air Hearthstone,
         Keywords=Linked
-    }{eye-of-someone}
+    }{eye-of-delepitorae}
+        \begin{figure}[b]
+            \centering
+            \includegraphics[height=1.5in]{Hearthstone.png}
+            \caption*{\itshape The Eye of Delepitorae}
+        \end{figure}
         This hearthstone is an azure blue orb, perfectly spherical. Its depths
-        are a dark black cloud. The Eye of -Someone- holds a pool of up to 10
+        are a dark black cloud. The Eye of Delepitorae holds a pool of up to 10
         sorcerous motes. As long as it is socketed into an attuned artifact,
         it allows the bearer to draw up to \Pool{\StatVal{Essence}} sorcerous
         motes from its pool per spell. Until the spell is cast or lost, the
         stone glows brightly.
 
-        The Eye of -Someone- recharges one sorcerous mote per day, at twilight,
+        The Eye of Depepitorae recharges one sorcerous mote per day, at twilight,
         or two within its home manse. The size of the dark cloud in the center
         of the Eye varies inversely with its charge.
 
         Once per story, the wearer may draw 10 sorcerous motes from The Eye of
-        -Someone-, regardless of it current pool. Once the spell is either cast
+        Delepitorae, regardless of it current pool. Once the spell is either cast
         or lost, The Eye's sorcerous mote pool empties and the stone turns jet
         black. It will not recharge sorcerous motes unless left to charge in
         its home manse for one month, coming to life fully charged at twilight
@@ -147,7 +153,6 @@
 \end{Merit}
 
 
-\DocumentColumnBreak
 \begin{Merit}{Language: Dragontongue}{%
     Type=Language,
     Rating=1,
@@ -183,6 +188,7 @@
 \end{Merit}
 
 
+\DocumentColumnBreak
 \begin{Merit}{House Stipend}{%
     Type=Resources,
     Rating=3,
@@ -204,7 +210,6 @@
 \end{Merit}
 
 
-\DocumentColumnBreak
 \begin{Merit}{Influence (House Tepet)}{%
     Type=Influence,
     Rating=2,
@@ -224,6 +229,4 @@
 
 
 \printbibliography[title=References]
-
-% vim: filetype=tex: textwidth=79:
 
